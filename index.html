@@ -1,1475 +1,1800 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Desk Stream</title>
+<title>Desk Stream</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+<style>
+* {
+    box-sizing: border-box;
+}
 
-    body {
-      font-family: Arial, Helvetica, sans-serif;
-      background: #080b12;
-      color: #ffffff;
-      min-height: 100vh;
-    }
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #080b12;
+    color: #fff;
+}
 
-    button {
-      font-family: inherit;
-      cursor: pointer;
-    }
+button,
+input,
+select,
+textarea {
+    font: inherit;
+}
 
-    /* =========================
-       TOP BAR
-    ========================= */
+button {
+    cursor: pointer;
+}
 
-    .topbar {
-      height: 70px;
-      background: #10151f;
-      border-bottom: 1px solid #252d3a;
+button:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+}
 
-      display: flex;
-      align-items: center;
+/* NAVIGATION */
 
-      padding: 0 24px;
-      gap: 28px;
+.topbar {
+    height: 70px;
+    background: #10151f;
+    border-bottom: 1px solid #252d3a;
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    gap: 25px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
 
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: none;
+    border: 0;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    white-space: nowrap;
+}
 
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
+.brand-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: white;
+    color: #10151f;
+    display: grid;
+    place-items: center;
+    font-weight: 900;
+}
 
-      background: transparent;
-      border: none;
-      color: white;
+.nav {
+    display: flex;
+    gap: 4px;
+    flex: 1;
+}
 
-      font-size: 20px;
-      font-weight: 700;
+.nav button {
+    border: 0;
+    background: transparent;
+    color: #aeb8c8;
+    padding: 10px 13px;
+    border-radius: 8px;
+}
 
-      white-space: nowrap;
-    }
+.nav button:hover,
+.nav button.active {
+    background: #1b2230;
+    color: white;
+}
 
-    .brand-icon {
-      width: 38px;
-      height: 38px;
+.top-actions {
+    display: flex;
+    gap: 8px;
+}
 
-      background: #ffffff;
-      color: #10151f;
+.search-button,
+.secondary {
+    background: #151c27;
+    color: white;
+    border: 1px solid #303948;
+    padding: 10px 15px;
+    border-radius: 8px;
+}
 
-      border-radius: 10px;
+.primary {
+    background: white;
+    color: #080b12;
+    border: 0;
+    padding: 11px 17px;
+    border-radius: 8px;
+    font-weight: bold;
+}
 
-      display: flex;
-      align-items: center;
-      justify-content: center;
+/* MAIN */
 
-      font-weight: 800;
-      font-size: 20px;
-    }
+main {
+    width: min(1250px, 100%);
+    margin: auto;
+    padding: 35px 24px 70px;
+}
+
+.hero {
+    padding: 30px 0 45px;
+}
+
+.eyebrow {
+    color: #75aaff;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+}
+
+.hero h1 {
+    font-size: clamp(40px, 6vw, 68px);
+    margin: 0 0 20px;
+    line-height: 1;
+}
+
+.hero p {
+    color: #9da8b8;
+    max-width: 750px;
+    line-height: 1.6;
+    font-size: 17px;
+}
+
+.hero-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 25px;
+    flex-wrap: wrap;
+}
+
+/* SECTIONS */
+
+.section {
+    margin-top: 30px;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.section-header h2 {
+    margin: 0;
+}
+
+/* CARDS */
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 15px;
+}
+
+.card {
+    background: #111823;
+    border: 1px solid #252e3b;
+    border-radius: 14px;
+    padding: 20px;
+}
+
+.card:hover {
+    border-color: #3c485a;
+}
+
+.card h3 {
+    margin: 12px 0 8px;
+}
+
+.card p {
+    color: #98a4b4;
+    line-height: 1.5;
+}
+
+.badge {
+    display: inline-block;
+    background: #202938;
+    color: #dce4ef;
+    border-radius: 30px;
+    padding: 5px 9px;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.live-badge {
+    background: #3a1c22;
+    color: #ff9ca8;
+}
+
+/* FORMS */
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.field.full {
+    grid-column: 1 / -1;
+}
+
+.field label {
+    color: #cbd4df;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.field input,
+.field select,
+.field textarea {
+    width: 100%;
+    background: #0c1119;
+    color: white;
+    border: 1px solid #303948;
+    border-radius: 8px;
+    padding: 12px;
+    outline: none;
+}
+
+.field textarea {
+    min-height: 110px;
+    resize: vertical;
+}
+
+/* STREAM PREVIEW */
+
+.preview {
+    aspect-ratio: 16 / 9;
+    background: #020306;
+    border: 1px solid #252e3b;
+    border-radius: 14px;
+    display: grid;
+    place-items: center;
+    color: #697587;
+    margin-bottom: 20px;
+}
+
+.preview.live {
+    border-color: #6b2730;
+}
+
+.preview-content {
+    text-align: center;
+}
+
+.preview-content strong {
+    display: block;
+    font-size: 22px;
+    color: white;
+    margin-bottom: 7px;
+}
+
+/* STATUS */
+
+.status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #111823;
+    border: 1px solid #252e3b;
+    padding: 12px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+.status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #687587;
+}
+
+.status-dot.live {
+    background: #ff5967;
+}
+
+/* TABLE */
+
+.table-wrap {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #111823;
+    border: 1px solid #252e3b;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+th,
+td {
+    text-align: left;
+    padding: 14px;
+    border-bottom: 1px solid #252e3b;
+}
+
+th {
+    color: #aeb8c8;
+    font-size: 13px;
+}
+
+/* PROJECTION */
+
+.projection {
+    background: #000;
+    min-height: 500px;
+    border-radius: 14px;
+    border: 1px solid #303030;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    padding: 40px;
+}
+
+.projection small {
+    color: #888;
+}
+
+.projection h2 {
+    font-size: clamp(30px, 5vw, 65px);
+}
+
+/* FOOTER */
+
+footer {
+    border-top: 1px solid #252d3a;
+    padding: 25px;
+    color: #7f8b9c;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+/* MOBILE */
+
+@media (max-width: 850px) {
 
     .nav {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-
-      flex: 1;
+        display: none;
     }
 
-    .nav button {
-      background: transparent;
-      border: none;
-
-      color: #aeb8c8;
-
-      padding: 10px 13px;
-      border-radius: 8px;
-
-      font-size: 14px;
-    }
-
-    .nav button:hover,
-    .nav button.active {
-      background: #1b2230;
-      color: white;
+    .topbar {
+        padding: 0 15px;
     }
 
     .top-actions {
-      display: flex;
-      gap: 8px;
+        margin-left: auto;
     }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .field.full {
+        grid-column: auto;
+    }
+}
+
+@media (max-width: 500px) {
 
     .search-button {
-      background: #171e29;
-      border: 1px solid #303948;
-
-      color: #dbe2ec;
-
-      padding: 10px 14px;
-      border-radius: 8px;
+        display: none;
     }
-
-    .live-button {
-      background: white;
-      color: #080b12;
-
-      border: none;
-
-      padding: 10px 16px;
-      border-radius: 8px;
-
-      font-weight: 700;
-    }
-
-    /* =========================
-       MAIN
-    ========================= */
 
     main {
-      width: min(1200px, 100%);
-      margin: auto;
-      padding: 40px 24px 70px;
-    }
-
-    /* =========================
-       HERO
-    ========================= */
-
-    .hero {
-      padding: 35px 0 55px;
-    }
-
-    .eyebrow {
-      color: #75aaff;
-
-      font-size: 13px;
-      font-weight: 700;
-
-      letter-spacing: 2px;
-
-      margin-bottom: 15px;
-    }
-
-    .hero h1 {
-      font-size: clamp(42px, 7vw, 72px);
-      line-height: 1;
-
-      max-width: 850px;
-
-      margin-bottom: 22px;
-    }
-
-    .hero p {
-      max-width: 720px;
-
-      color: #9da8b8;
-
-      font-size: 17px;
-      line-height: 1.65;
-    }
-
-    .hero-actions {
-      display: flex;
-      gap: 12px;
-
-      margin-top: 28px;
-
-      flex-wrap: wrap;
-    }
-
-    .primary-button {
-      background: white;
-      color: #080b12;
-
-      border: none;
-
-      padding: 12px 18px;
-
-      border-radius: 8px;
-
-      font-weight: 700;
-    }
-
-    .secondary-button {
-      background: #151c27;
-
-      color: white;
-
-      border: 1px solid #303948;
-
-      padding: 12px 18px;
-
-      border-radius: 8px;
-    }
-
-    /* =========================
-       SECTIONS
-    ========================= */
-
-    .section {
-      margin-top: 35px;
-    }
-
-    .section-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-
-      gap: 15px;
-
-      margin-bottom: 16px;
-    }
-
-    .section-header h2 {
-      font-size: 24px;
-    }
-
-    .section-header button {
-      background: transparent;
-      border: none;
-
-      color: #75aaff;
-
-      font-weight: 600;
-    }
-
-    /* =========================
-       CARDS
-    ========================= */
-
-    .cards {
-      display: grid;
-
-      grid-template-columns:
-        repeat(auto-fit, minmax(220px, 1fr));
-
-      gap: 16px;
-    }
-
-    .card {
-      background: #111823;
-
-      border: 1px solid #252e3b;
-
-      border-radius: 14px;
-
-      padding: 20px;
-
-      min-height: 170px;
-
-      transition: transform 0.15s ease,
-                  border-color 0.15s ease;
-    }
-
-    .card:hover {
-      transform: translateY(-2px);
-      border-color: #3c485a;
-    }
-
-    .card h3 {
-      font-size: 19px;
-      margin: 14px 0 8px;
-    }
-
-    .card p {
-      color: #99a5b5;
-
-      line-height: 1.5;
-
-      margin-bottom: 16px;
-    }
-
-    .badge {
-      display: inline-block;
-
-      background: #202938;
-
-      color: #d9e1ec;
-
-      border-radius: 30px;
-
-      padding: 5px 9px;
-
-      font-size: 11px;
-      font-weight: 700;
-
-      letter-spacing: 0.5px;
-    }
-
-    .live-badge {
-      background: #3a1c22;
-      color: #ff9ca8;
-    }
-
-    /* =========================
-       PLAYER
-    ========================= */
-
-    .player {
-      width: 100%;
-
-      aspect-ratio: 16 / 9;
-
-      background: #020306;
-
-      border: 1px solid #252e3b;
-
-      border-radius: 15px;
-
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      color: #6f7c8e;
-
-      margin-bottom: 20px;
-    }
-
-    /* =========================
-       SEARCH
-    ========================= */
-
-    .search-box {
-      display: flex;
-      gap: 10px;
-
-      margin-bottom: 30px;
-    }
-
-    .search-box input {
-      flex: 1;
-
-      background: #111823;
-
-      color: white;
-
-      border: 1px solid #303948;
-
-      padding: 13px;
-
-      border-radius: 8px;
-
-      outline: none;
-    }
-
-    /* =========================
-       FOOTER
-    ========================= */
-
-    footer {
-      border-top: 1px solid #252d3a;
-
-      padding: 25px;
-
-      color: #7f8b9c;
-
-      display: flex;
-      justify-content: space-between;
-
-      gap: 20px;
-
-      flex-wrap: wrap;
-    }
-
-    /* =========================
-       MOBILE
-    ========================= */
-
-    @media (max-width: 850px) {
-      .topbar {
-        padding: 0 15px;
-      }
-
-      .nav {
-        display: none;
-      }
-
-      .top-actions {
-        margin-left: auto;
-      }
-    }
-
-    @media (max-width: 550px) {
-      .search-button {
-        display: none;
-      }
-
-      main {
         padding: 25px 15px 50px;
-      }
-
-      .hero {
-        padding-top: 20px;
-      }
-
-      footer {
-        font-size: 13px;
-      }
     }
-  </style>
+}
+</style>
 </head>
 
 <body>
 
-  <!-- =========================
-       TOP NAVIGATION
-  ========================= -->
+<header class="topbar">
 
-  <header class="topbar">
-
-    <button class="brand" onclick="showHome()">
-
-      <span class="brand-icon">D</span>
-
-      <span>Desk Stream</span>
-
+    <button class="brand" onclick="home()">
+        <span class="brand-icon">D</span>
+        <span>Desk Stream</span>
     </button>
-
 
     <nav class="nav">
 
-      <button id="nav-home" onclick="showHome()">
-        Home
-      </button>
-
-      <button id="nav-live" onclick="showLive()">
-        Live
-      </button>
-
-      <button id="nav-channels" onclick="showChannels()">
-        Channels
-      </button>
-
-      <button id="nav-bible" onclick="showBible()">
-        Bible
-      </button>
-
-      <button id="nav-videos" onclick="showVideos()">
-        Videos
-      </button>
+        <button id="nav-home" onclick="home()">Home</button>
+        <button id="nav-live" onclick="live()">Live</button>
+        <button id="nav-channels" onclick="channels()">Channels</button>
+        <button id="nav-bible" onclick="bible()">Bible</button>
+        <button id="nav-videos" onclick="videos()">Videos</button>
 
     </nav>
 
-
     <div class="top-actions">
 
-      <button
-        class="search-button"
-        onclick="showSearch()"
-      >
-        Search
-      </button>
+        <button class="search-button" onclick="searchPage()">
+            Search
+        </button>
 
-      <button
-        class="live-button"
-        onclick="showStudio()"
-      >
-        Go Live
-      </button>
+        <button class="primary" onclick="studio()">
+            Go Live
+        </button>
 
     </div>
 
-  </header>
+</header>
 
+<main id="app"></main>
 
-  <!-- =========================
-       APPLICATION
-  ========================= -->
+<footer>
 
-  <main id="app"></main>
-
-
-  <!-- =========================
-       FOOTER
-  ========================= -->
-
-  <footer>
+    <span>© 2026 Desk Stream</span>
 
     <span>
-      © 2026 Desk Stream
+        Free streaming and presentation platform
     </span>
 
-    <span>
-      Free streaming and presentation platform
-    </span>
+</footer>
 
-  </footer>
+<script>
 
+/* ==========================
+   NAVIGATION
+========================== */
 
-  <!-- =========================
-       APPLICATION JAVASCRIPT
-  ========================= -->
+function activate(id) {
 
-  <script>
-
-    /* -------------------------
-       NAVIGATION
-    ------------------------- */
-
-    function clearActiveNav() {
-
-      document
+    document
         .querySelectorAll(".nav button")
         .forEach(button => {
-          button.classList.remove("active");
+            button.classList.remove("active");
         });
 
-    }
+    const button = document.getElementById(id);
 
-
-    function activateNav(id) {
-
-      clearActiveNav();
-
-      const button =
-        document.getElementById(id);
-
-      if (button) {
+    if (button) {
         button.classList.add("active");
-      }
-
     }
+}
 
 
-    /* -------------------------
-       HOME
-    ------------------------- */
+/* ==========================
+   HOME
+========================== */
 
-    function showHome() {
+function home() {
 
-      activateNav("nav-home");
+    activate("nav-home");
 
-      document.getElementById("app").innerHTML = `
+    app.innerHTML = `
 
         <section class="hero">
 
-          <div class="eyebrow">
-            DESK STREAM
-          </div>
+            <div class="eyebrow">
+                DESK STREAM
+            </div>
 
-          <h1>
-            Stream, present, watch and share.
-          </h1>
+            <h1>
+                Your streaming desk.
+            </h1>
 
-          <p>
-            Desk Stream is a free streaming platform
-            designed for churches, creators,
-            communities, events and everyone who
-            wants to share live video.
-          </p>
+            <p>
+                Stream live events, manage channels,
+                present Bible content, and organize
+                your videos from one platform.
+            </p>
 
-          <div class="hero-actions">
+            <div class="hero-actions">
 
-            <button
-              class="primary-button"
-              onclick="showStudio()"
-            >
-              Start Streaming
-            </button>
+                <button class="primary" onclick="studio()">
+                    Go Live
+                </button>
 
-            <button
-              class="secondary-button"
-              onclick="showBible()"
-            >
-              Bible Projection
-            </button>
+                <button class="secondary" onclick="bible()">
+                    Open Bible Projection
+                </button>
 
-          </div>
+            </div>
 
         </section>
 
 
         <section class="section">
 
-          <div class="section-header">
+            <div class="section-header">
 
-            <h2>
-              Live Now
-            </h2>
+                <h2>Live Now</h2>
 
-            <button onclick="showLive()">
-              View All
-            </button>
-
-          </div>
-
-
-          <div class="cards">
-
-            <div class="card">
-
-              <span class="badge live-badge">
-                ● LIVE
-              </span>
-
-              <h3>
-                Joy Church
-              </h3>
-
-              <p>
-                Church broadcast • 128 viewers
-              </p>
-
-              <button
-                class="primary-button"
-                onclick="watchLive()"
-              >
-                Watch
-              </button>
+                <button class="secondary" onclick="live()">
+                    View All
+                </button>
 
             </div>
 
 
-            <div class="card">
+            <div class="cards">
 
-              <span class="badge">
-                FEATURED
-              </span>
+                <div class="card">
 
-              <h3>
-                Desk Stream
-              </h3>
+                    <span class="badge live-badge">
+                        ● LIVE
+                    </span>
 
-              <p>
-                Official Desk Stream channel
-              </p>
+                    <h3>Joy Church</h3>
+
+                    <p>
+                        Church service • 128 viewers
+                    </p>
+
+                    <button
+                        class="primary"
+                        onclick="watch()"
+                    >
+                        Watch
+                    </button>
+
+                </div>
+
+
+                <div class="card">
+
+                    <span class="badge">
+                        FEATURED
+                    </span>
+
+                    <h3>Desk Stream</h3>
+
+                    <p>
+                        Official Desk Stream channel.
+                    </p>
+
+                </div>
+
+
+                <div class="card">
+
+                    <span class="badge">
+                        EVENTS
+                    </span>
+
+                    <h3>Live Events</h3>
+
+                    <p>
+                        Discover broadcasts and events.
+                    </p>
+
+                </div>
 
             </div>
-
-
-            <div class="card">
-
-              <span class="badge">
-                CHURCH
-              </span>
-
-              <h3>
-                Church Services
-              </h3>
-
-              <p>
-                Discover live church broadcasts.
-              </p>
-
-            </div>
-
-          </div>
 
         </section>
 
 
         <section class="section">
 
-          <div class="section-header">
-
-            <h2>
-              Features
-            </h2>
-
-          </div>
+            <div class="section-header">
+                <h2>Platform</h2>
+            </div>
 
 
-          <div class="cards">
+            <div class="cards">
 
-            <div class="card">
+                <div class="card">
 
-              <span class="badge">
+                    <span class="badge">
+                        STREAM
+                    </span>
+
+                    <h3>Live Streaming</h3>
+
+                    <p>
+                        Configure your broadcast and
+                        streaming destination.
+                    </p>
+
+                </div>
+
+
+                <div class="card">
+
+                    <span class="badge">
+                        BIBLE
+                    </span>
+
+                    <h3>Bible Projection</h3>
+
+                    <p>
+                        Prepare scripture for your
+                        audience display.
+                    </p>
+
+                </div>
+
+
+                <div class="card">
+
+                    <span class="badge">
+                        CHANNELS
+                    </span>
+
+                    <h3>Channels</h3>
+
+                    <p>
+                        Organize your content and
+                        broadcasts.
+                    </p>
+
+                </div>
+
+
+                <div class="card">
+
+                    <span class="badge">
+                        VIDEO
+                    </span>
+
+                    <h3>Video Library</h3>
+
+                    <p>
+                        Organize recordings and videos.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    `;
+}
+
+
+/* ==========================
+   LIVE
+========================== */
+
+function live() {
+
+    activate("nav-live");
+
+    app.innerHTML = `
+
+        <section class="hero">
+
+            <div class="eyebrow">
                 LIVE
-              </span>
-
-              <h3>
-                Live Streaming
-              </h3>
-
-              <p>
-                Broadcast events and services
-                to viewers online.
-              </p>
-
             </div>
 
+            <h1>
+                Live broadcasts
+            </h1>
 
-            <div class="card">
-
-              <span class="badge">
-                PRESENT
-              </span>
-
-              <h3>
-                Bible Projection
-              </h3>
-
-              <p>
-                Prepare Bible verses and
-                presentation content.
-              </p>
-
-            </div>
-
-
-            <div class="card">
-
-              <span class="badge">
-                CHANNELS
-              </span>
-
-              <h3>
-                Channels
-              </h3>
-
-              <p>
-                Create and discover Desk Stream
+            <p>
+                Watch broadcasts from Desk Stream
                 channels.
-              </p>
+            </p>
+
+        </section>
+
+
+        <div class="cards">
+
+            <div class="card">
+
+                <span class="badge live-badge">
+                    ● LIVE
+                </span>
+
+                <h3>
+                    Joy Church
+                </h3>
+
+                <p>
+                    Church service • 128 viewers
+                </p>
+
+                <button class="primary" onclick="watch()">
+                    Watch Live
+                </button>
 
             </div>
 
 
             <div class="card">
 
-              <span class="badge">
-                QUALITY
-              </span>
+                <span class="badge live-badge">
+                    ● LIVE
+                </span>
 
-              <h3>
-                High Quality
-              </h3>
+                <h3>
+                    Desk Stream Events
+                </h3>
 
-              <p>
-                Designed for modern
-                high-resolution streaming.
-              </p>
+                <p>
+                    Live event broadcast.
+                </p>
+
+                <button class="primary" onclick="watch()">
+                    Watch
+                </button>
 
             </div>
 
-          </div>
+        </div>
 
-        </section>
-
-      `;
-
-    }
+    `;
+}
 
 
-    /* -------------------------
-       LIVE
-    ------------------------- */
+/* ==========================
+   CHANNELS
+========================== */
 
-    function showLive() {
+function channels() {
 
-      activateNav("nav-live");
+    activate("nav-channels");
 
-      document.getElementById("app").innerHTML = `
+    app.innerHTML = `
 
         <section class="hero">
 
-          <div class="eyebrow">
-            LIVE
-          </div>
+            <div class="eyebrow">
+                CHANNELS
+            </div>
 
-          <h1>
-            Live broadcasts
-          </h1>
+            <h1>
+                Channels
+            </h1>
 
-          <p>
-            Watch live broadcasts from
-            Desk Stream channels.
-          </p>
+            <p>
+                Discover Desk Stream channels.
+            </p>
 
         </section>
 
 
-        <section class="section">
-
-          <div class="cards">
+        <div class="cards">
 
             <div class="card">
 
-              <span class="badge live-badge">
-                ● LIVE
-              </span>
+                <span class="badge">
+                    CHURCH
+                </span>
 
-              <h3>
-                Joy Church
-              </h3>
+                <h3>
+                    Joy Church
+                </h3>
 
-              <p>
-                Church service • 128 viewers
-              </p>
+                <p>
+                    Church broadcasts and services.
+                </p>
 
-              <button
-                class="primary-button"
-                onclick="watchLive()"
-              >
-                Watch Live
-              </button>
+                <button class="secondary">
+                    Open Channel
+                </button>
 
             </div>
 
 
             <div class="card">
 
-              <span class="badge live-badge">
-                ● LIVE
-              </span>
+                <span class="badge">
+                    GAMING
+                </span>
 
-              <h3>
-                Desk Stream Events
-              </h3>
+                <h3>
+                    Gaming
+                </h3>
 
-              <p>
-                Live events and broadcasts.
-              </p>
+                <p>
+                    Gaming livestreams.
+                </p>
 
-              <button
-                class="primary-button"
-                onclick="watchLive()"
-              >
-                Watch
-              </button>
+                <button class="secondary">
+                    Open Channel
+                </button>
 
             </div>
 
-          </div>
 
-        </section>
+            <div class="card">
 
-      `;
+                <span class="badge">
+                    MUSIC
+                </span>
 
-    }
+                <h3>
+                    Music
+                </h3>
+
+                <p>
+                    Music and live performances.
+                </p>
+
+                <button class="secondary">
+                    Open Channel
+                </button>
+
+            </div>
+
+        </div>
+
+    `;
+}
 
 
-    /* -------------------------
-       CHANNELS
-    ------------------------- */
+/* ==========================
+   BIBLE
+========================== */
 
-    function showChannels() {
+function bible() {
 
-      activateNav("nav-channels");
+    activate("nav-bible");
 
-      document.getElementById("app").innerHTML = `
+    app.innerHTML = `
 
         <section class="hero">
 
-          <div class="eyebrow">
-            CHANNELS
-          </div>
+            <div class="eyebrow">
+                BIBLE PROJECTION
+            </div>
 
-          <h1>
-            Discover channels
-          </h1>
+            <h1>
+                Presentation Desk
+            </h1>
 
-          <p>
-            Find streams and content from
-            the Desk Stream community.
-          </p>
+            <p>
+                Prepare content for your audience,
+                stage display, or stream.
+            </p>
 
         </section>
 
 
-        <section class="section">
-
-          <div class="cards">
+        <div class="cards">
 
             <div class="card">
 
-              <span class="badge">
-                CHURCHES
-              </span>
+                <span class="badge">
+                    SCRIPTURE
+                </span>
 
-              <h3>
-                Joy Church
-              </h3>
+                <h3>
+                    Bible Search
+                </h3>
 
-              <p>
-                Live church broadcasts
-                and services.
-              </p>
+                <p>
+                    Search and select scripture.
+                </p>
+
+                <button
+                    class="primary"
+                    onclick="projection()"
+                >
+                    Open Projection
+                </button>
 
             </div>
 
 
             <div class="card">
 
-              <span class="badge">
-                GAMING
-              </span>
+                <span class="badge">
+                    AUDIENCE
+                </span>
 
-              <h3>
-                Gaming
-              </h3>
+                <h3>
+                    Audience Display
+                </h3>
 
-              <p>
-                Gaming livestreams
-                and events.
-              </p>
+                <p>
+                    Clean presentation output.
+                </p>
 
-            </div>
-
-
-            <div class="card">
-
-              <span class="badge">
-                MUSIC
-              </span>
-
-              <h3>
-                Music
-              </h3>
-
-              <p>
-                Music broadcasts
-                and performances.
-              </p>
+                <button
+                    class="secondary"
+                    onclick="audience()"
+                >
+                    Preview
+                </button>
 
             </div>
 
 
             <div class="card">
 
-              <span class="badge">
-                EVENTS
-              </span>
+                <span class="badge">
+                    STAGE
+                </span>
 
-              <h3>
-                Events
-              </h3>
+                <h3>
+                    Stage Display
+                </h3>
 
-              <p>
-                Conferences, meetings
-                and special events.
-              </p>
+                <p>
+                    Upcoming verses and notes.
+                </p>
+
+                <button
+                    class="secondary"
+                    onclick="stage()"
+                >
+                    Preview
+                </button>
 
             </div>
 
-          </div>
+        </div>
 
-        </section>
-
-      `;
-
-    }
+    `;
+}
 
 
-    /* -------------------------
-       BIBLE
-    ------------------------- */
+/* ==========================
+   PROJECTION
+========================== */
 
-    function showBible() {
+function projection() {
 
-      activateNav("nav-bible");
-
-      document.getElementById("app").innerHTML = `
+    app.innerHTML = `
 
         <section class="hero">
 
-          <div class="eyebrow">
-            BIBLE PROJECTION
-          </div>
+            <div class="eyebrow">
+                AUDIENCE DISPLAY
+            </div>
 
-          <h1>
-            Bible Presentation
-          </h1>
+            <h1>
+                Bible Projection
+            </h1>
 
-          <p>
-            Prepare scripture for your
-            presentation and projection.
-          </p>
+            <p>
+                Preview your projected content.
+            </p>
 
         </section>
 
 
-        <section class="section">
+        <div class="projection">
 
-          <div class="cards">
+            <div>
 
-            <div class="card">
+                <small>
+                    BIBLE PROJECTION PREVIEW
+                </small>
 
-              <span class="badge">
-                SCRIPTURE
-              </span>
+                <h2>
+                    Scripture Preview
+                </h2>
 
-              <h3>
-                Bible Search
-              </h3>
-
-              <p>
-                Search for a Bible book,
-                chapter and verse.
-              </p>
-
-              <button
-                class="primary-button"
-                onclick="openProjection()"
-              >
-                Open Projection
-              </button>
+                <p>
+                    Your selected verse will appear here.
+                </p>
 
             </div>
-
-
-            <div class="card">
-
-              <span class="badge">
-                DISPLAY
-              </span>
-
-              <h3>
-                Audience Display
-              </h3>
-
-              <p>
-                A clean presentation screen
-                for your audience.
-              </p>
-
-            </div>
-
-
-            <div class="card">
-
-              <span class="badge">
-                STAGE
-              </span>
-
-              <h3>
-                Stage Display
-              </h3>
-
-              <p>
-                Prepare upcoming verses
-                and presentation notes.
-              </p>
-
-            </div>
-
-          </div>
-
-        </section>
-
-      `;
-
-    }
-
-
-    /* -------------------------
-       PROJECTION
-    ------------------------- */
-
-    function openProjection() {
-
-      document.getElementById("app").innerHTML = `
-
-        <section class="hero">
-
-          <div class="eyebrow">
-            PROJECTION
-          </div>
-
-          <h1>
-            Bible Projection
-          </h1>
-
-          <p>
-            Projection preview.
-          </p>
-
-        </section>
-
-
-        <div class="player">
-
-          Bible Projection Preview
 
         </div>
 
 
-        <button
-          class="primary-button"
-          onclick="showBible()"
-        >
-          Back to Bible
+        <br>
 
+        <button class="secondary" onclick="bible()">
+            Back
         </button>
 
-      `;
+    `;
+}
 
-    }
+
+/* ==========================
+   AUDIENCE
+========================== */
+
+function audience() {
+
+    projection();
+
+}
 
 
-    /* -------------------------
-       VIDEOS
-    ------------------------- */
+/* ==========================
+   STAGE
+========================== */
 
-    function showVideos() {
+function stage() {
 
-      activateNav("nav-videos");
-
-      document.getElementById("app").innerHTML = `
+    app.innerHTML = `
 
         <section class="hero">
 
-          <div class="eyebrow">
-            VIDEOS
-          </div>
+            <div class="eyebrow">
+                STAGE DISPLAY
+            </div>
 
-          <h1>
-            Video Library
-          </h1>
+            <h1>
+                Confidence Monitor
+            </h1>
 
-          <p>
-            Your recorded videos and
-            broadcasts will appear here.
-          </p>
+            <p>
+                Stage operators can view upcoming
+                presentation content here.
+            </p>
+
+        </section>
+
+
+        <div class="cards">
+
+            <div class="card">
+
+                <span class="badge">
+                    CURRENT
+                </span>
+
+                <h3>
+                    Current Slide
+                </h3>
+
+                <p>
+                    Current presentation content.
+                </p>
+
+            </div>
+
+
+            <div class="card">
+
+                <span class="badge">
+                    NEXT
+                </span>
+
+                <h3>
+                    Next Slide
+                </h3>
+
+                <p>
+                    Upcoming presentation content.
+                </p>
+
+            </div>
+
+
+            <div class="card">
+
+                <span class="badge">
+                    CLOCK
+                </span>
+
+                <h3>
+                    Service Clock
+                </h3>
+
+                <p id="clock">
+                    Loading...
+                </p>
+
+            </div>
+
+        </div>
+
+    `;
+
+    updateClock();
+
+}
+
+
+/* ==========================
+   VIDEOS
+========================== */
+
+function videos() {
+
+    activate("nav-videos");
+
+    app.innerHTML = `
+
+        <section class="hero">
+
+            <div class="eyebrow">
+                VIDEO LIBRARY
+            </div>
+
+            <h1>
+                Videos
+            </h1>
+
+            <p>
+                Manage recorded broadcasts and videos.
+            </p>
+
+        </section>
+
+
+        <div class="cards">
+
+            <div class="card">
+
+                <span class="badge">
+                    RECORDING
+                </span>
+
+                <h3>
+                    Sunday Service
+                </h3>
+
+                <p>
+                    Recorded broadcast.
+                </p>
+
+                <button class="secondary">
+                    Watch
+                </button>
+
+            </div>
+
+
+            <div class="card">
+
+                <span class="badge">
+                    VIDEO
+                </span>
+
+                <h3>
+                    Worship Night
+                </h3>
+
+                <p>
+                    Event recording.
+                </p>
+
+                <button class="secondary">
+                    Watch
+                </button>
+
+            </div>
+
+        </div>
+
+    `;
+}
+
+
+/* ==========================
+   CREATOR STUDIO
+========================== */
+
+function studio() {
+
+    activate("");
+
+    app.innerHTML = `
+
+        <section class="hero">
+
+            <div class="eyebrow">
+                CREATOR STUDIO
+            </div>
+
+            <h1>
+                Go Live
+            </h1>
+
+            <p>
+                Configure your Desk Stream broadcast.
+            </p>
+
+        </section>
+
+
+        <div class="status">
+
+            <span class="status-dot" id="statusDot"></span>
+
+            <span id="statusText">
+                Ready to stream
+            </span>
+
+        </div>
+
+
+        <div class="preview" id="streamPreview">
+
+            <div class="preview-content">
+
+                <strong>
+                    Stream Preview
+                </strong>
+
+                Camera and stream preview
+                will appear here.
+
+            </div>
+
+        </div>
+
+
+        <section class="section">
+
+            <div class="cards">
+
+                <div class="card">
+
+                    <h3>
+                        Stream Setup
+                    </h3>
+
+                    <div class="form-grid">
+
+                        <div class="field">
+
+                            <label>
+                                Stream Title
+                            </label>
+
+                            <input
+                                id="streamTitle"
+                                type="text"
+                                placeholder="Sunday Service"
+                            >
+
+                        </div>
+
+
+                        <div class="field">
+
+                            <label>
+                                Category
+                            </label>
+
+                            <select id="category">
+
+                                <option>
+                                    Church
+                                </option>
+
+                                <option>
+                                    Gaming
+                                </option>
+
+                                <option>
+                                    Music
+                                </option>
+
+                                <option>
+                                    Events
+                                </option>
+
+                                <option>
+                                    Education
+                                </option>
+
+                                <option>
+                                    Other
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="field">
+
+                            <label>
+                                Video Quality
+                            </label>
+
+                            <select id="quality">
+
+                                <option>
+                                    1080p
+                                </option>
+
+                                <option>
+                                    1440p
+                                </option>
+
+                                <option>
+                                    4K
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="field">
+
+                            <label>
+                                Frame Rate
+                            </label>
+
+                            <select id="fps">
+
+                                <option>
+                                    30 FPS
+                                </option>
+
+                                <option>
+                                    60 FPS
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="card">
+
+                    <h3>
+                        Camera
+                    </h3>
+
+                    <div class="field">
+
+                        <label>
+                            Camera
+                        </label>
+
+                        <select>
+
+                            <option>
+                                Default Camera
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <br>
+
+                    <div class="field">
+
+                        <label>
+                            Microphone
+                        </label>
+
+                        <select>
+
+                            <option>
+                                Default Microphone
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <div class="card">
+
+                    <h3>
+                        Destination
+                    </h3>
+
+                    <div class="field">
+
+                        <label>
+                            Streaming Platform
+                        </label>
+
+                        <select id="platform">
+
+                            <option>
+                                Desk Stream
+                            </option>
+
+                            <option>
+                                YouTube
+                            </option>
+
+                            <option>
+                                TikTok
+                            </option>
+
+                            <option>
+                                Facebook
+                            </option>
+
+                            <option>
+                                Twitch
+                            </option>
+
+                            <option>
+                                Custom RTMP
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <br>
+
+                    <button
+                        class="secondary"
+                        onclick="connectPlatform()"
+                    >
+                        Configure Destination
+                    </button>
+
+                </div>
+
+            </div>
 
         </section>
 
 
         <section class="section">
 
-          <div class="cards">
-
             <div class="card">
 
-              <span class="badge">
-                VIDEO
-              </span>
+                <h3>
+                    Stream Controls
+                </h3>
 
-              <h3>
-                Your Videos
-              </h3>
+                <button
+                    class="primary"
+                    onclick="startStream()"
+                >
+                    Start Stream
+                </button>
 
-              <p>
-                Upload and organize recordings
-                in a future version.
-              </p>
+                &nbsp;
 
-            </div>
-
-
-            <div class="card">
-
-              <span class="badge">
-                RECORDINGS
-              </span>
-
-              <h3>
-                Live Recordings
-              </h3>
-
-              <p>
-                Saved broadcasts will appear here.
-              </p>
+                <button
+                    class="secondary"
+                    onclick="stopStream()"
+                >
+                    Stop Stream
+                </button>
 
             </div>
-
-          </div>
 
         </section>
 
-      `;
+    `;
 
+}
+
+
+/* ==========================
+   START STREAM
+========================== */
+
+function startStream() {
+
+    const title =
+        document.getElementById("streamTitle").value
+        || "Untitled Stream";
+
+    const preview =
+        document.getElementById("streamPreview");
+
+    const dot =
+        document.getElementById("statusDot");
+
+    const status =
+        document.getElementById("statusText");
+
+    preview.classList.add("live");
+
+    preview.innerHTML = `
+
+        <div class="preview-content">
+
+            <strong>
+                ● LIVE
+            </strong>
+
+            ${escapeHTML(title)}
+
+        </div>
+
+    `;
+
+    dot.classList.add("live");
+
+    status.textContent =
+        "Live preview active";
+
+}
+
+
+/* ==========================
+   STOP STREAM
+========================== */
+
+function stopStream() {
+
+    const preview =
+        document.getElementById("streamPreview");
+
+    const dot =
+        document.getElementById("statusDot");
+
+    const status =
+        document.getElementById("statusText");
+
+    if (!preview) {
+        return;
     }
 
+    preview.classList.remove("live");
 
-    /* -------------------------
-       CREATOR STUDIO
-    ------------------------- */
+    preview.innerHTML = `
 
-    function showStudio() {
+        <div class="preview-content">
 
-      clearActiveNav();
+            <strong>
+                Stream Preview
+            </strong>
 
-      document.getElementById("app").innerHTML = `
+            Camera and stream preview
+            will appear here.
+
+        </div>
+
+    `;
+
+    dot.classList.remove("live");
+
+    status.textContent =
+        "Ready to stream";
+
+}
+
+
+/* ==========================
+   PLATFORM
+========================== */
+
+function connectPlatform() {
+
+    const platform =
+        document.getElementById("platform").value;
+
+    alert(
+        platform +
+        " connection will be implemented through the secure backend."
+    );
+
+}
+
+
+/* ==========================
+   SEARCH
+========================== */
+
+function searchPage() {
+
+    activate("");
+
+    app.innerHTML = `
 
         <section class="hero">
 
-          <div class="eyebrow">
-            CREATOR STUDIO
-          </div>
+            <div class="eyebrow">
+                SEARCH
+            </div>
 
-          <h1>
-            Go Live
-          </h1>
+            <h1>
+                Search Desk Stream
+            </h1>
 
-          <p>
-            Configure your Desk Stream
-            broadcast.
-          </p>
+            <p>
+                Search channels, videos,
+                broadcasts and more.
+            </p>
 
         </section>
 
 
-        <section class="section">
+        <div class="card">
 
-          <div class="cards">
+            <div class="field">
 
-            <div class="card">
+                <label>
+                    Search
+                </label>
 
-              <span class="badge">
-                STREAM
-              </span>
-
-              <h3>
-                Create Broadcast
-              </h3>
-
-              <p>
-                Set up a new Desk Stream broadcast.
-              </p>
-
-              <button
-                class="primary-button"
-                onclick="createStream()"
-              >
-                Create Stream
-              </button>
+                <input
+                    id="searchInput"
+                    type="text"
+                    placeholder="Search Desk Stream..."
+                >
 
             </div>
 
+            <br>
 
-            <div class="card">
-
-              <span class="badge">
-                DESTINATIONS
-              </span>
-
-              <h3>
-                Streaming Platforms
-              </h3>
-
-              <p>
-                YouTube • TikTok • Facebook
-                • Twitch • Custom RTMP
-              </p>
-
-            </div>
-
-
-            <div class="card">
-
-              <span class="badge">
-                QUALITY
-              </span>
-
-              <h3>
-                Video Quality
-              </h3>
-
-              <p>
-                1080p • 1440p • 4K
-              </p>
-
-            </div>
-
-          </div>
-
-        </section>
-
-      `;
-
-    }
-
-
-    /* -------------------------
-       CREATE STREAM
-    ------------------------- */
-
-    function createStream() {
-
-      alert(
-        "Desk Stream streaming setup will be connected in the next version."
-      );
-
-    }
-
-
-    /* -------------------------
-       WATCH
-    ------------------------- */
-
-    function watchLive() {
-
-      document.getElementById("app").innerHTML = `
-
-        <section class="hero">
-
-          <div class="eyebrow">
-            LIVE PLAYER
-          </div>
-
-          <h1>
-            Joy Church
-          </h1>
-
-          <p>
-            Live broadcast preview.
-          </p>
-
-        </section>
-
-
-        <div class="player">
-
-          Live video player
+            <button
+                class="primary"
+                onclick="performSearch()"
+            >
+                Search
+            </button>
 
         </div>
 
 
-        <button
-          class="primary-button"
-          onclick="showLive()"
-        >
-          Back to Live
-
-        </button>
-
-      `;
-
-    }
-
-
-    /* -------------------------
-       SEARCH
-    ------------------------- */
-
-    function showSearch() {
-
-      clearActiveNav();
-
-      document.getElementById("app").innerHTML = `
-
-        <section class="hero">
-
-          <div class="eyebrow">
-            SEARCH
-          </div>
-
-          <h1>
-            Search Desk Stream
-          </h1>
-
-          <p>
-            Find channels, broadcasts,
-            videos and Bible content.
-          </p>
-
-        </section>
-
-
-        <div class="search-box">
-
-          <input
-            id="searchInput"
-            type="text"
-            placeholder="Search Desk Stream..."
-          >
-
-          <button
-            class="primary-button"
-            onclick="performSearch()"
-          >
-            Search
-          </button>
-
-        </div>
-
+        <br>
 
         <div id="searchResults"></div>
 
-      `;
+    `;
 
-    }
+}
 
 
-    function performSearch() {
+function performSearch() {
 
-      const input =
+    const input =
         document.getElementById("searchInput");
 
-      const results =
+    const results =
         document.getElementById("searchResults");
 
-      const query =
+    const query =
         input.value.trim();
 
-      if (!query) {
+    if (!query) {
 
         results.innerHTML = `
 
-          <div class="card">
+            <div class="card">
 
-            Please enter something to search.
+                Please enter a search term.
 
-          </div>
+            </div>
 
         `;
 
         return;
 
-      }
+    }
 
-      results.innerHTML = `
+    results.innerHTML = `
 
         <div class="card">
 
-          <span class="badge">
-            SEARCH
-          </span>
+            <span class="badge">
+                SEARCH RESULT
+            </span>
 
-          <h3>
-            Search Results
-          </h3>
+            <h3>
+                ${escapeHTML(query)}
+            </h3>
 
-          <p>
-            Searching for:
-            <strong>${escapeHTML(query)}</strong>
-          </p>
-
-          <p>
-            Full Desk Stream search will be
-            connected in a future version.
-          </p>
+            <p>
+                Search backend will be connected
+                in the next stage.
+            </p>
 
         </div>
 
-      `;
+    `;
 
+}
+
+
+/* ==========================
+   WATCH
+========================== */
+
+function watch() {
+
+    app.innerHTML = `
+
+        <section class="hero">
+
+            <div class="eyebrow">
+                LIVE PLAYER
+            </div>
+
+            <h1>
+                Joy Church
+            </h1>
+
+            <p>
+                Live broadcast preview.
+            </p>
+
+        </section>
+
+
+        <div class="preview">
+
+            <div class="preview-content">
+
+                <strong>
+                    Live Player
+                </strong>
+
+                Video will appear here when
+                the streaming backend is connected.
+
+            </div>
+
+        </div>
+
+
+        <button
+            class="secondary"
+            onclick="live()"
+        >
+            Back to Live
+        </button>
+
+    `;
+
+}
+
+
+/* ==========================
+   CLOCK
+========================== */
+
+function updateClock() {
+
+    const clock =
+        document.getElementById("clock");
+
+    if (!clock) {
+        return;
     }
 
+    const now = new Date();
 
-    /* -------------------------
-       SECURITY HELPER
-    ------------------------- */
+    clock.textContent =
+        now.toLocaleTimeString();
 
-    function escapeHTML(text) {
+    setTimeout(updateClock, 1000);
 
-      return text
+}
+
+
+/* ==========================
+   SECURITY
+========================== */
+
+function escapeHTML(text) {
+
+    return text
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
 
-    }
+}
 
 
-    /* -------------------------
-       START APPLICATION
-    ------------------------- */
+/* ==========================
+   START
+========================== */
 
-    showHome();
+home();
 
-  </script>
+</script>
 
 </body>
 </html>
