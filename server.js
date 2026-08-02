@@ -1,155 +1,265 @@
 const express = require("express");
-const crypto = require("crypto");
-const path = require("path");
+const cors = require("cors");
 
 const app = express();
+
 const PORT = process.env.PORT || 3000;
 
+app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, "public")));
 
-const channels = [
-  {
-    id: "joy-church",
-    name: "Joy Church",
-    category: "Churches",
-    live: true,
-    viewers: 128
-  },
-  {
-    id: "desk-demo",
-    name: "Desk Stream Demo",
-    category: "Education",
-    live: false,
-    viewers: 0
-  }
-];
+/*
+  Desk Stream Backend
+  -------------------
+  This server provides the API foundation for:
+  - Stream management
+  - Stream status
+  - Platform configuration
+  - Health monitoring
 
-const streams = new Map();
+  IMPORTANT:
+  Stream keys and API credentials should be stored
+  as server environment variables, NOT in GitHub code.
+*/
 
-app.get("/api/health", (_req, res) => {
-  res.json({
-    ok: true,
-    service: "Desk Stream",
-    version: "1.0.0"
-  });
+
+let currentStream = {
+    active: false,
+    title: "",
+    category: "",
+    quality: "",
+    fps: "",
+    platform: "",
+    startedAt: null
+};
+
+
+/* =========================
+   HEALTH CHECK
+========================= */
+
+app.get("/api/health", (req, res) => {
+
+    res.json({
+        success: true,
+        service: "Desk Stream",
+        status: "online",
+        time: new Date().toISOString()
+    });
+
 });
 
-app.get("/api/channels", (_req, res) => {
-  res.json(channels);
+
+/* =========================
+   STREAM STATUS
+========================= */
+
+app.get("/api/stream/status", (req, res) => {
+
+    res.json({
+        success: true,
+        stream: currentStream
+    });
+
 });
 
-app.get("/api/streaming/platforms", (_req, res) => {
-  res.json([
-    {
-      id: "youtube",
-      name: "YouTube",
-      auth: "google",
-      rtmp: true
-    },
-    {
-      id: "tiktok",
-      name: "TikTok",
-      auth: "stream-key",
-      rtmp: true
-    },
-    {
-      id: "facebook",
-      name: "Facebook",
-      auth: "stream-key",
-      rtmp: true
-    },
-    {
-      id: "twitch",
-      name: "Twitch",
-      auth: "stream-key",
-      rtmp: true
-    },
-    {
-      id: "custom",
-      name: "Custom RTMP",
-      auth: "stream-key",
-      rtmp: true
+
+/* =========================
+   START STREAM
+========================= */
+
+app.post("/api/stream/start", (req, res) => {
+
+    if (currentStream.active) {
+
+        return res.status(409).json({
+            success: false,
+            message: "A stream is already active."
+        });
+
     }
-  ]);
-});
 
-app.post("/api/stream/create", (req, res) => {
-  const {
-    title = "Untitled Stream",
-    category = "Other",
-    quality = "1440p"
-  } = req.body || {};
+    const {
+        title,
+        category,
+        quality,
+        fps,
+        platform
+    } = req.body;
 
-  const id = crypto.randomUUID();
-  const streamKey =
-    "ds_" + crypto.randomBytes(18).toString("hex");
 
-  const stream = {
-    id,
-    title,
-    category,
-    quality,
-    streamKey,
-    rtmpServer: "rtmps://stream.deskstream.local/live",
-    status: "ready",
-    createdAt: new Date().toISOString()
-  };
+    if (!title) {
 
-  streams.set(id, stream);
+        return res.status(400).json({
+            success: false,
+            message: "Stream title is required."
+        });
 
-  res.status(201).json(stream);
-});
+    }
 
-app.get("/api/stream/:id", (req, res) => {
-  const stream = streams.get(req.params.id);
 
-  if (!stream) {
-    return res.status(404).json({
-      error: "Stream not found"
+    currentStream = {
+
+        active: true,
+
+        title: title,
+
+        category: category || "Other",
+
+        quality: quality || "1080p",
+
+        fps: fps || "30 FPS",
+
+        platform: platform || "Desk Stream",
+
+        startedAt: new Date().toISOString()
+
+    };
+
+
+    console.log(
+        "Desk Stream started:",
+        currentStream
+    );
+
+
+    res.json({
+
+        success: true,
+
+        message: "Stream session created.",
+
+        stream: currentStream
+
     });
-  }
 
-  res.json({
-    ...stream,
-    streamKey: "••••••••••••••••••••"
-  });
 });
 
-app.post("/api/stream/:id/status", (req, res) => {
-  const stream = streams.get(req.params.id);
 
-  if (!stream) {
-    return res.status(404).json({
-      error: "Stream not found"
+/* =========================
+   STOP STREAM
+========================= */
+
+app.post("/api/stream/stop", (req, res) => {
+
+    if (!currentStream.active) {
+
+        return res.status(400).json({
+
+            success: false,
+
+            message: "There is no active stream."
+
+        });
+
+    }
+
+
+    const previousStream = {
+        ...currentStream
+    };
+
+
+    currentStream = {
+
+        active: false,
+
+        title: "",
+
+        category: "",
+
+        quality: "",
+
+        fps: "",
+
+        platform: "",
+
+        startedAt: null
+
+    };
+
+
+    console.log(
+        "Desk Stream stopped."
+    );
+
+
+    res.json({
+
+        success: true,
+
+        message: "Stream stopped.",
+
+        previousStream
+
     });
-  }
 
-  const allowed = [
-    "ready",
-    "live",
-    "offline"
-  ];
+});
 
-  if (!allowed.includes(req.body?.status)) {
-    return res.status(400).json({
-      error: "Invalid status"
+
+/* =========================
+   PLATFORM LIST
+========================= */
+
+app.get("/api/platforms", (req, res) => {
+
+    res.json({
+
+        success: true,
+
+        platforms: [
+
+            {
+                id: "desk-stream",
+                name: "Desk Stream",
+                type: "native"
+            },
+
+            {
+                id: "youtube",
+                name: "YouTube",
+                type: "oauth"
+            },
+
+            {
+                id: "tiktok",
+                name: "TikTok",
+                type: "oauth"
+            },
+
+            {
+                id: "facebook",
+                name: "Facebook",
+                type: "oauth"
+            },
+
+            {
+                id: "twitch",
+                name: "Twitch",
+                type: "oauth"
+            },
+
+            {
+                id: "custom-rtmp",
+                name: "Custom RTMP",
+                type: "rtmp"
+            }
+
+        ]
+
     });
-  }
 
-  stream.status = req.body.status;
-
-  res.json(stream);
 });
 
-app.get("*splat", (_req, res) => {
-  res.sendFile(
-    path.join(__dirname, "public", "index.html")
-  );
-});
+
+/* =========================
+   SERVER
+========================= */
 
 app.listen(PORT, () => {
-  console.log(
-    `Desk Stream running at http://localhost:${PORT}`
-  );
+
+    console.log(
+        `Desk Stream server running on port ${PORT}`
+    );
+
 });
