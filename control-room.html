@@ -1,3 +1,576 @@
-<button class="primary" onclick="openControlRoom()">
-    Go Live
-</button>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Desk Stream — Control Room</title>
+
+    <link rel="stylesheet" href="control-room.css">
+</head>
+
+<body>
+
+<header class="topbar">
+
+    <div class="brand">
+        <div class="brand-logo">D</div>
+
+        <div>
+            <strong>Desk Stream</strong>
+            <span>Control Room</span>
+        </div>
+    </div>
+
+    <div class="channel-selector">
+
+        <label>CHANNEL</label>
+
+        <select id="channelSelect">
+            <option value="main">Joy Church Main</option>
+            <option value="youth">Joy Church Youth</option>
+            <option value="worship">Worship</option>
+            <option value="bible">Bible Study</option>
+        </select>
+
+    </div>
+
+    <div class="top-status">
+
+        <span class="status-dot"></span>
+
+        <span id="connectionStatus">
+            Ready
+        </span>
+
+    </div>
+
+    <button class="home-button" onclick="goHome()">
+        ← Home
+    </button>
+
+</header>
+
+
+<main class="workspace">
+
+
+    <!-- LEFT -->
+    <aside class="left-panel">
+
+
+        <section class="panel">
+
+            <div class="panel-title">
+                <span>SCENES</span>
+
+                <button onclick="addScene()">+</button>
+            </div>
+
+
+            <div id="sceneList" class="scene-list">
+
+                <button
+                    class="scene active"
+                    data-scene="Main Service"
+                    onclick="selectScene(this)"
+                >
+                    <span>▣</span>
+                    Main Service
+                </button>
+
+                <button
+                    class="scene"
+                    data-scene="Worship"
+                    onclick="selectScene(this)"
+                >
+                    <span>♪</span>
+                    Worship
+                </button>
+
+                <button
+                    class="scene"
+                    data-scene="Sermon"
+                    onclick="selectScene(this)"
+                >
+                    <span>▤</span>
+                    Sermon
+                </button>
+
+                <button
+                    class="scene"
+                    data-scene="Bible"
+                    onclick="selectScene(this)"
+                >
+                    <span>📖</span>
+                    Bible
+                </button>
+
+                <button
+                    class="scene"
+                    data-scene="Announcement"
+                    onclick="selectScene(this)"
+                >
+                    <span>▧</span>
+                    Announcement
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <section class="panel sources-panel">
+
+            <div class="panel-title">
+                <span>SOURCES</span>
+
+                <button onclick="addSource()">+</button>
+            </div>
+
+
+            <div id="sourceList">
+
+                <div class="source">
+                    <span>📷</span>
+                    Camera
+                    <button onclick="toggleSource(this)">◉</button>
+                </div>
+
+                <div class="source">
+                    <span>🎤</span>
+                    Microphone
+                    <button onclick="toggleSource(this)">◉</button>
+                </div>
+
+                <div class="source">
+                    <span>📖</span>
+                    Bible Projection
+                    <button onclick="toggleSource(this)">◉</button>
+                </div>
+
+                <div class="source">
+                    <span>🎵</span>
+                    Lyrics
+                    <button onclick="toggleSource(this)">◉</button>
+                </div>
+
+                <div class="source">
+                    <span>🖼️</span>
+                    Logo
+                    <button onclick="toggleSource(this)">◉</button>
+                </div>
+
+            </div>
+
+        </section>
+
+
+    </aside>
+
+
+    <!-- CENTER -->
+    <section class="center-panel">
+
+
+        <div class="preview-header">
+
+            <div>
+                <span class="preview-label">PREVIEW</span>
+                <strong id="previewScene">
+                    Main Service
+                </strong>
+            </div>
+
+            <button onclick="fullscreenPreview()">
+                ⛶
+            </button>
+
+        </div>
+
+
+        <div class="preview-window" id="previewWindow">
+
+            <div class="preview-content">
+
+                <span>PREVIEW</span>
+
+                <h2 id="previewTitle">
+                    Main Service
+                </h2>
+
+                <p>
+                    This is what you are preparing
+                    to send live.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="transition-bar">
+
+            <button onclick="transitionScene()">
+                TRANSITION
+            </button>
+
+            <button onclick="cutScene()">
+                CUT
+            </button>
+
+            <button onclick="fadeScene()">
+                FADE
+            </button>
+
+        </div>
+
+
+        <div class="program-header">
+
+            <div>
+                <span class="program-label">PROGRAM</span>
+
+                <strong id="programScene">
+                    Main Service
+                </strong>
+            </div>
+
+            <span class="live-indicator">
+                ● LIVE OUTPUT
+            </span>
+
+        </div>
+
+
+        <div class="program-window" id="programWindow">
+
+            <div class="program-content">
+
+                <span>PROGRAM</span>
+
+                <h2 id="programTitle">
+                    Main Service
+                </h2>
+
+                <p>
+                    Current live output
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="status-strip">
+
+            <div>
+                <span>FPS</span>
+                <strong id="fpsValue">60</strong>
+            </div>
+
+            <div>
+                <span>CPU</span>
+                <strong id="cpuValue">18%</strong>
+            </div>
+
+            <div>
+                <span>GPU</span>
+                <strong id="gpuValue">24%</strong>
+            </div>
+
+            <div>
+                <span>NETWORK</span>
+                <strong id="networkValue">Excellent</strong>
+            </div>
+
+            <div>
+                <span>DROPPED</span>
+                <strong id="droppedValue">0.0%</strong>
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+    <!-- RIGHT -->
+    <aside class="right-panel">
+
+
+        <section class="panel stream-panel">
+
+            <div class="panel-title">
+                STREAM
+            </div>
+
+
+            <div class="stream-status">
+
+                <span class="big-status-dot"></span>
+
+                <div>
+
+                    <strong id="streamStatus">
+                        OFFLINE
+                    </strong>
+
+                    <span id="streamTimer">
+                        Ready to stream
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="quality">
+
+                <div>
+                    <span>QUALITY</span>
+                    <strong>1080p</strong>
+                </div>
+
+                <div>
+                    <span>FPS</span>
+                    <strong>60</strong>
+                </div>
+
+                <div>
+                    <span>BITRATE</span>
+                    <strong>6 Mbps</strong>
+                </div>
+
+            </div>
+
+
+            <div class="platforms">
+
+                <div>
+                    <span>YouTube</span>
+                    <strong>●</strong>
+                </div>
+
+                <div>
+                    <span>TikTok</span>
+                    <strong>●</strong>
+                </div>
+
+                <div>
+                    <span>Facebook</span>
+                    <strong>●</strong>
+                </div>
+
+                <div>
+                    <span>Custom RTMP</span>
+                    <strong>●</strong>
+                </div>
+
+            </div>
+
+
+            <button
+                id="goLiveButton"
+                class="go-live"
+                onclick="startStream()"
+            >
+                ● GO LIVE
+            </button>
+
+
+            <button
+                id="stopButton"
+                class="stop-stream"
+                onclick="stopStream()"
+                disabled
+            >
+                ■ STOP STREAM
+            </button>
+
+
+            <button
+                id="recordButton"
+                class="record-button"
+                onclick="toggleRecording()"
+            >
+                ● START RECORDING
+            </button>
+
+        </section>
+
+
+        <section class="panel audio-panel">
+
+            <div class="panel-title">
+                AUDIO MIXER
+            </div>
+
+
+            <div class="mixer">
+
+                <div class="mixer-row">
+
+                    <div class="mixer-name">
+                        🎤 Mic
+                    </div>
+
+                    <input
+                        type="range"
+                        min="0"
+                        max="100"
+                        value="80"
+                        oninput="changeVolume(this, 'mic')"
+                    >
+
+                    <span id="micVolume">
+                        80
+                    </span>
+
+                    <button onclick="muteChannel(this)">
+                        🔊
+                    </button>
+
+                </div>
+
+
+                <div class="mixer-row">
+
+                    <div class="mixer-name">
+                        🎵 Music
+                    </div>
+
+                    <input
+                        type="range"
+                        min="0"
+                        max="100"
+                        value="55"
+                        oninput="changeVolume(this, 'music')"
+                    >
+
+                    <span id="musicVolume">
+                        55
+                    </span>
+
+                    <button onclick="muteChannel(this)">
+                        🔊
+                    </button>
+
+                </div>
+
+
+                <div class="mixer-row">
+
+                    <div class="mixer-name">
+                        🔊 Desktop
+                    </div>
+
+                    <input
+                        type="range"
+                        min="0"
+                        max="100"
+                        value="65"
+                        oninput="changeVolume(this, 'desktop')"
+                    >
+
+                    <span id="desktopVolume">
+                        65
+                    </span>
+
+                    <button onclick="muteChannel(this)">
+                        🔊
+                    </button>
+
+                </div>
+
+
+                <div class="mixer-row">
+
+                    <div class="mixer-name">
+                        🎚 Master
+                    </div>
+
+                    <input
+                        type="range"
+                        min="0"
+                        max="100"
+                        value="90"
+                        oninput="changeVolume(this, 'master')"
+                    >
+
+                    <span id="masterVolume">
+                        90
+                    </span>
+
+                    <button onclick="muteChannel(this)">
+                        🔊
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <section class="panel tools-panel">
+
+            <div class="panel-title">
+                TOOLS
+            </div>
+
+
+            <div class="tool-grid">
+
+                <button onclick="openBible()">
+                    📖
+                    <span>Bible</span>
+                </button>
+
+                <button onclick="openLyrics()">
+                    🎵
+                    <span>Lyrics</span>
+                </button>
+
+                <button onclick="openCamera()">
+                    📷
+                    <span>Camera</span>
+                </button>
+
+                <button onclick="screenCapture()">
+                    🖥️
+                    <span>Screen</span>
+                </button>
+
+                <button onclick="addTextSource()">
+                    📝
+                    <span>Text</span>
+                </button>
+
+                <button onclick="openSettings()">
+                    ⚙️
+                    <span>Settings</span>
+                </button>
+
+            </div>
+
+        </section>
+
+
+    </aside>
+
+</main>
+
+
+<div
+    id="notification"
+    class="notification"
+>
+    Ready
+</div>
+
+
+<script src="control-room.js"></script>
+
+</body>
+</html>
