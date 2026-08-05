@@ -1184,306 +1184,525 @@ function studio() {
 
     app.innerHTML = `
 
-        <section class="hero">
+        <style>
+            .ds-go-live { max-width: 1500px; margin: 0 auto; }
+            .ds-go-live-header { margin-bottom: 18px; }
+            .ds-go-live-header h1 { margin: 5px 0; font-size: 30px; }
+            .ds-go-live-header p { opacity: .65; margin: 0; }
 
-            <div class="eyebrow">
-                CREATOR STUDIO
+            .ds-live-status {
+                display:flex; align-items:center; gap:9px;
+                padding:10px 14px; margin-bottom:15px;
+                border-radius:8px;
+                background:rgba(255,255,255,.04);
+                border:1px solid rgba(255,255,255,.08);
+            }
+
+            .ds-status-dot {
+                width:9px; height:9px; border-radius:50%;
+                background:#687384;
+            }
+            .ds-status-dot.live {
+                background:#ef4444;
+                box-shadow:0 0 12px rgba(239,68,68,.7);
+            }
+
+            .ds-control-grid {
+                display:grid;
+                grid-template-columns:repeat(3,minmax(0,1fr));
+                gap:15px;
+            }
+
+            .ds-card {
+                background:rgba(255,255,255,.035);
+                border:1px solid rgba(255,255,255,.09);
+                border-radius:12px;
+                padding:17px;
+                box-shadow:0 10px 30px rgba(0,0,0,.12);
+            }
+
+            .ds-card h3 { margin:0 0 15px; font-size:15px; }
+
+            .ds-field { margin-bottom:12px; }
+            .ds-field label {
+                display:block; font-size:11px; opacity:.62; margin-bottom:6px;
+            }
+
+            .ds-field input,
+            .ds-field select,
+            .ds-field textarea {
+                width:100%; box-sizing:border-box;
+                padding:10px 11px;
+                border-radius:7px;
+                border:1px solid rgba(255,255,255,.1);
+                background:rgba(0,0,0,.22);
+                color:inherit; outline:none;
+            }
+
+            .ds-field textarea { min-height:120px; resize:vertical; }
+
+            .ds-description-button,
+            .ds-add-button,
+            .ds-control-button,
+            .ds-small-button {
+                width:100%;
+                border:1px solid rgba(255,255,255,.1);
+                border-radius:7px;
+                padding:10px;
+                background:rgba(255,255,255,.055);
+                color:inherit;
+                cursor:pointer;
+                margin-top:6px;
+            }
+
+            .ds-primary-button {
+                background:#2563eb;
+                border-color:#2563eb;
+            }
+            .ds-primary-button:hover { background:#1d4ed8; }
+
+            .ds-toggle-row {
+                display:flex; justify-content:space-between; align-items:center;
+                padding:9px; margin:5px 0 12px;
+                border-radius:7px;
+                background:rgba(255,255,255,.035);
+            }
+
+            .ds-toggle {
+                border:0; border-radius:20px; padding:5px 12px;
+                background:#475569; color:white; cursor:pointer;
+                font-size:10px; font-weight:bold;
+            }
+            .ds-toggle.on { background:#16a34a; }
+
+            .ds-list { display:flex; flex-direction:column; gap:7px; }
+
+            .ds-list-item {
+                display:flex; align-items:center; justify-content:space-between;
+                gap:10px; padding:10px; border-radius:8px;
+                background:rgba(0,0,0,.2);
+                border:1px solid rgba(255,255,255,.07);
+            }
+
+            .ds-item-info { min-width:0; }
+            .ds-item-info strong { display:block; font-size:12px; }
+            .ds-item-info span {
+                display:block; font-size:10px; opacity:.55; margin-top:3px;
+            }
+
+            .ds-item-actions { display:flex; gap:5px; }
+            .ds-item-actions button {
+                border:1px solid rgba(255,255,255,.1);
+                background:rgba(255,255,255,.05);
+                color:inherit; border-radius:5px;
+                padding:5px 8px; cursor:pointer; font-size:10px;
+            }
+
+            .ds-scene-item { cursor:pointer; }
+            .ds-scene-item.active {
+                border-color:#2563eb;
+                background:rgba(37,99,235,.12);
+            }
+
+            .ds-scene-thumb {
+                width:58px; height:38px; border-radius:5px;
+                display:grid; place-items:center;
+                background:rgba(255,255,255,.06);
+                font-size:9px; opacity:.6; flex-shrink:0;
+            }
+
+            .ds-scene-left {
+                display:flex; align-items:center; gap:9px;
+            }
+
+            .ds-empty {
+                padding:15px; text-align:center; opacity:.5;
+                font-size:11px;
+                border:1px dashed rgba(255,255,255,.1);
+                border-radius:7px;
+            }
+
+            .ds-channel-count { font-size:10px; opacity:.55; }
+
+            .ds-card-header {
+                display:flex; align-items:center; justify-content:space-between;
+                gap:10px; margin-bottom:15px;
+            }
+            .ds-card-header h3 { margin:0; }
+            .ds-card-header button { width:auto; margin:0; }
+
+            .ds-stream-controls {
+                display:flex; flex-direction:column; gap:7px;
+            }
+            .ds-stream-controls button { text-align:left; }
+            .ds-stream-controls .ds-primary-button {
+                text-align:center; font-weight:bold;
+            }
+
+            .ds-preview {
+                min-height:220px;
+                display:grid; place-items:center;
+                border-radius:10px;
+                background:#080b10;
+                border:1px solid rgba(255,255,255,.08);
+                overflow:hidden;
+            }
+
+            .ds-preview-content { text-align:center; opacity:.55; }
+            .ds-preview.live { border-color:#ef4444; }
+            .ds-preview.live .ds-preview-content strong { color:#ef4444; }
+
+            .ds-modal {
+                position:fixed; inset:0;
+                display:none; align-items:center; justify-content:center;
+                background:rgba(0,0,0,.72);
+                z-index:99999; padding:20px;
+            }
+            .ds-modal.show { display:flex; }
+
+            .ds-modal-box {
+                width:min(520px,100%);
+                background:#111820;
+                border:1px solid rgba(255,255,255,.12);
+                border-radius:12px;
+                padding:18px;
+                box-shadow:0 25px 70px rgba(0,0,0,.5);
+            }
+
+            .ds-modal-header {
+                display:flex; justify-content:space-between; align-items:center;
+                margin-bottom:15px;
+            }
+            .ds-modal-header h3 { margin:0; }
+
+            .ds-close {
+                background:transparent; border:0; color:inherit;
+                font-size:23px; cursor:pointer;
+            }
+
+            .ds-modal-actions {
+                display:flex; gap:8px; justify-content:flex-end; margin-top:12px;
+            }
+            .ds-modal-actions button { width:auto; min-width:100px; }
+
+            @media (max-width:1000px) {
+                .ds-control-grid { grid-template-columns:repeat(2,1fr); }
+            }
+
+            @media (max-width:680px) {
+                .ds-control-grid { grid-template-columns:1fr; }
+            }
+        </style>
+
+        <div class="ds-go-live">
+
+            <div class="ds-go-live-header">
+                <div class="eyebrow">CREATOR STUDIO</div>
+                <h1>Go Live</h1>
+                <p>Configure your Desk Stream broadcast.</p>
             </div>
 
-            <h1>
-                Go Live
-            </h1>
-
-            <p>
-                Configure your Desk Stream broadcast.
-            </p>
-
-        </section>
-
-
-        <div class="status">
-
-            <span class="status-dot" id="statusDot"></span>
-
-            <span id="statusText">
-                Ready to stream
-            </span>
-
-        </div>
-
-
-        <div class="preview" id="streamPreview">
-
-            <div class="preview-content">
-
-                <strong>
-                    Stream Preview
-                </strong>
-
-                Camera and stream preview
-                will appear here.
-
+            <div class="ds-live-status">
+                <span id="statusDot" class="ds-status-dot"></span>
+                <span id="statusText">Ready to stream</span>
             </div>
 
-        </div>
-
-
-        <section class="section">
-
-            <div class="cards">
-
-                <div class="card">
-
-                    <h3>
-                        Stream Setup
-                    </h3>
-
-                    <div class="form-grid">
-
-                        <div class="field">
-
-                            <label>
-                                Stream Title
-                            </label>
-
-                            <input
-                                id="streamTitle"
-                                type="text"
-                                placeholder="Sunday Service"
-                            >
-
-                        </div>
-
-
-                        <div class="field">
-
-                            <label>
-                                Category
-                            </label>
-
-                            <select id="category">
-
-                                <option>
-                                    Church
-                                </option>
-
-                                <option>
-                                    Gaming
-                                </option>
-
-                                <option>
-                                    Music
-                                </option>
-
-                                <option>
-                                    Events
-                                </option>
-
-                                <option>
-                                    Education
-                                </option>
-
-                                <option>
-                                    Other
-                                </option>
-
-                            </select>
-
-                        </div>
-
-
-                        <div class="field">
-
-                            <label>
-                                Video Quality
-                            </label>
-
-                            <select id="quality">
-
-                                <option>
-                                    1080p
-                                </option>
-
-                                <option>
-                                    1440p
-                                </option>
-
-                                <option>
-                                    4K
-                                </option>
-
-                            </select>
-
-                        </div>
-
-
-                        <div class="field">
-
-                            <label>
-                                Frame Rate
-                            </label>
-
-                            <select id="fps">
-
-                                <option>
-                                    30 FPS
-                                </option>
-
-                                <option>
-                                    60 FPS
-                                </option>
-
-                            </select>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <div class="card">
-
-                    <h3>
-                        Camera
-                    </h3>
-
-                    <div class="field">
-
-                        <label>
-                            Camera
-                        </label>
-
-                        <select>
-
-                            <option>
-                                Default Camera
-                            </option>
-
-                        </select>
-
-                    </div>
-
+            <div id="streamPreview" class="ds-preview">
+                <div class="ds-preview-content">
+                    <strong>Stream Preview</strong>
                     <br>
-
-                    <div class="field">
-
-                        <label>
-                            Microphone
-                        </label>
-
-                        <select>
-
-                            <option>
-                                Default Microphone
-                            </option>
-
-                        </select>
-
-                    </div>
-
+                    Camera and stream preview will appear here.
                 </div>
+            </div>
 
+            <br>
 
-                <div class="card">
+            <div class="ds-control-grid">
 
-                    <h3>
-                        Destination
-                    </h3>
+                <section class="ds-card">
+                    <h3>Stream Setup</h3>
 
-                    <div class="field">
-
-                        <label>
-                            Streaming Platform
-                        </label>
-
-                        <select id="platform">
-
-                            <option>
-                                Desk Stream
-                            </option>
-
-                            <option>
-                                YouTube
-                            </option>
-
-                            <option>
-                                TikTok
-                            </option>
-
-                            <option>
-                                Facebook
-                            </option>
-
-                            <option>
-                                Twitch
-                            </option>
-
-                            <option>
-                                Custom RTMP
-                            </option>
-
-                        </select>
-
+                    <div class="ds-field">
+                        <label>Stream Title</label>
+                        <input id="streamTitle" type="text" placeholder="Sunday Service">
                     </div>
 
-                    <br>
-
-                    <button
-                        class="secondary"
-                        onclick="connectPlatform()"
-                    >
-                        Configure Destination
+                    <button class="ds-description-button" onclick="openStreamDescription()">
+                        ✎ Stream Description
                     </button>
 
+                    <div class="ds-field">
+                        <label>Category</label>
+                        <select id="category">
+                            <option>Church</option>
+                            <option>Worship</option>
+                            <option>Sermon</option>
+                            <option>Bible Study</option>
+                            <option>Events</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+
+                    <div class="ds-field">
+                        <label>Video Quality</label>
+                        <select id="quality">
+                            <option>1080p</option>
+                            <option>1440p</option>
+                            <option>4K</option>
+                        </select>
+                    </div>
+
+                    <div class="ds-field">
+                        <label>Frame Rate</label>
+                        <select id="fps">
+                            <option>30 FPS</option>
+                            <option>60 FPS</option>
+                        </select>
+                    </div>
+                </section>
+
+                <section class="ds-card">
+                    <h3>Camera & Audio</h3>
+
+                    <div class="ds-field">
+                        <label>Camera</label>
+                        <select id="cameraSelect">
+                            <option>Default Camera</option>
+                        </select>
+                    </div>
+
+                    <div class="ds-toggle-row">
+                        <span>Camera</span>
+                        <button id="cameraToggle" class="ds-toggle on" onclick="toggleDeskCamera()">ON</button>
+                    </div>
+
+                    <div class="ds-field">
+                        <label>Microphone</label>
+                        <select id="micSelect">
+                            <option>Default Microphone</option>
+                        </select>
+                    </div>
+
+                    <div class="ds-toggle-row">
+                        <span>Microphone</span>
+                        <button id="micToggle" class="ds-toggle on" onclick="toggleDeskMic()">ON</button>
+                    </div>
+
+                    <div class="ds-field">
+                        <label>Audio</label>
+                        <select id="audioSelect">
+                            <option>Default Audio</option>
+                            <option>Desktop Audio</option>
+                            <option>Church Sound System</option>
+                        </select>
+                    </div>
+
+                    <div class="ds-field">
+                        <label>Screen Projection</label>
+                        <select id="projectionSelect">
+                            <option>No Projection</option>
+                            <option>Desk Stream Projection</option>
+                        </select>
+                    </div>
+
+                    <div class="ds-field">
+                        <label>Multi-View</label>
+                        <select id="multiViewSelect">
+                            <option>Off</option>
+                            <option>2 Sources</option>
+                            <option>4 Sources</option>
+                            <option>6 Sources</option>
+                        </select>
+                    </div>
+
+                    <button class="ds-small-button" onclick="openDeskMultiView()">
+                        🖥 Open Multi-View
+                    </button>
+                </section>
+
+                <section class="ds-card">
+                    <div class="ds-card-header">
+                        <h3>Channels</h3>
+                        <span id="channelCount" class="ds-channel-count">0 / 50</span>
+                    </div>
+
+                    <div id="channelList" class="ds-list"></div>
+
+                    <button class="ds-add-button" onclick="openChannelCreator()">
+                        + Add Channel
+                    </button>
+                </section>
+
+                <section class="ds-card">
+                    <div class="ds-card-header">
+                        <h3>Scenes</h3>
+                        <button class="ds-small-button" onclick="openSceneCreator()">
+                            + Add Scene
+                        </button>
+                    </div>
+
+                    <div id="sceneList" class="ds-list"></div>
+                </section>
+
+                <section class="ds-card">
+                    <h3>Destinations</h3>
+
+                    <div class="ds-field">
+                        <label>Streaming Platform</label>
+                        <select id="platform">
+                            <option>Desk Stream</option>
+                            <option>YouTube</option>
+                            <option>TikTok</option>
+                            <option>Facebook</option>
+                            <option>Twitch</option>
+                            <option>Custom RTMP</option>
+                        </select>
+                    </div>
+
+                    <button class="ds-control-button" onclick="connectPlatform()">
+                        Configure Destination
+                    </button>
+                </section>
+
+                <section class="ds-card">
+                    <h3>Stream Controls</h3>
+
+                    <div class="ds-stream-controls">
+
+                        <button id="startStreamButton"
+                                class="ds-control-button ds-primary-button"
+                                onclick="startStream()">
+                            ▶ Start Streaming
+                        </button>
+
+                        <button id="recordButton"
+                                class="ds-control-button"
+                                onclick="toggleDeskRecording()">
+                            ● Start Recording
+                        </button>
+
+                        <button id="virtualCameraButton"
+                                class="ds-control-button"
+                                onclick="toggleDeskVirtualCamera()">
+                            📷 Start Virtual Camera
+                        </button>
+
+                        <button class="ds-control-button" onclick="openDeskStudioMode()">
+                            🎬 Studio Mode
+                        </button>
+
+                        <button class="ds-control-button" onclick="openDeskSettings()">
+                            ⚙ Settings
+                        </button>
+
+                        <button class="ds-control-button" onclick="stopStream()">
+                            ■ Stop Stream
+                        </button>
+
+                    </div>
+                </section>
+
+            </div>
+        </div>
+
+        <div id="streamDescriptionModal" class="ds-modal">
+            <div class="ds-modal-box">
+
+                <div class="ds-modal-header">
+                    <h3>Stream Description</h3>
+                    <button class="ds-close" onclick="closeStreamDescription()">×</button>
+                </div>
+
+                <div class="ds-field">
+                    <label>Description</label>
+                    <textarea id="streamDescription"
+                              placeholder="Tell viewers about this livestream..."></textarea>
+                </div>
+
+                <div class="ds-modal-actions">
+                    <button class="ds-control-button" onclick="closeStreamDescription()">Cancel</button>
+                    <button class="ds-control-button ds-primary-button" onclick="saveStreamDescription()">Save</button>
                 </div>
 
             </div>
+        </div>
 
-        </section>
+        <div id="sceneCreatorModal" class="ds-modal">
+            <div class="ds-modal-box">
 
+                <div class="ds-modal-header">
+                    <h3>Add Scene</h3>
+                    <button class="ds-close" onclick="closeSceneCreator()">×</button>
+                </div>
 
-        <section class="section">
+                <div class="ds-field">
+                    <label>Scene Name</label>
+                    <input id="newSceneName" type="text" placeholder="Enter your scene name">
+                </div>
 
-            <div class="card">
-
-                <h3>
-                    Stream Controls
-                </h3>
-
-                <button
-                    class="primary"
-                    onclick="startStream()"
-                >
-                    Start Stream
-                </button>
-
-                &nbsp;
-
-                <button
-                    class="secondary"
-                    onclick="stopStream()"
-                >
-                    Stop Stream
-                </button>
+                <div class="ds-modal-actions">
+                    <button class="ds-control-button" onclick="closeSceneCreator()">Cancel</button>
+                    <button class="ds-control-button ds-primary-button" onclick="createDeskScene()">Create Scene</button>
+                </div>
 
             </div>
+        </div>
 
-        </section>
+        <div id="channelCreatorModal" class="ds-modal">
+            <div class="ds-modal-box">
 
+                <div class="ds-modal-header">
+                    <h3>Add Channel</h3>
+                    <button class="ds-close" onclick="closeChannelCreator()">×</button>
+                </div>
+
+                <div class="ds-field">
+                    <label>Channel Account Name</label>
+                    <input id="newChannelName" type="text" placeholder="Example: Church YouTube">
+                </div>
+
+                <div class="ds-field">
+                    <label>Platform</label>
+                    <select id="newChannelPlatform">
+                        <option>YouTube</option>
+                        <option>Facebook</option>
+                        <option>TikTok</option>
+                        <option>Twitch</option>
+                        <option>Custom RTMP</option>
+                    </select>
+                </div>
+
+                <div class="ds-field">
+                    <label>Stream Key</label>
+                    <input id="newChannelKey" type="password" placeholder="Enter stream key">
+                </div>
+
+                <p style="font-size:10px;opacity:.55;line-height:1.5;">
+                    Stream keys are sensitive credentials. Do not put real stream keys directly into public GitHub code.
+                </p>
+
+                <div class="ds-modal-actions">
+                    <button class="ds-control-button" onclick="closeChannelCreator()">Cancel</button>
+                    <button class="ds-control-button ds-primary-button" onclick="createDeskChannel()">Add Channel</button>
+                </div>
+
+            </div>
+        </div>
     `;
 
+    renderDeskScenes();
+    renderDeskChannels();
+
+    const savedDescription = localStorage.getItem("deskStreamDescription");
+    if (savedDescription) {
+        document.getElementById("streamDescription").value = savedDescription;
+    }
 }
-
-
-/* ==========================
-   START STREAM
-========================== */
 
 function startStream() {
 
     const title =
-        document.getElementById("streamTitle").value
+        document.getElementById("streamTitle").value.trim()
         || "Untitled Stream";
 
     const preview =
@@ -1498,30 +1717,29 @@ function startStream() {
     preview.classList.add("live");
 
     preview.innerHTML = `
-
         <div class="preview-content">
-
-            <strong>
-                ● LIVE
-            </strong>
-
+            <strong>● LIVE</strong>
+            <br><br>
             ${escapeHTML(title)}
-
         </div>
-
     `;
 
     dot.classList.add("live");
+    status.textContent = "Live preview active";
 
-    status.textContent =
-        "Live preview active";
+    const streamData = {
+        title: title,
+        description: localStorage.getItem("deskStreamDescription") || "",
+        category: document.getElementById("category").value,
+        startedAt: new Date().toISOString()
+    };
 
+    localStorage.setItem(
+        "deskStreamActive",
+        JSON.stringify(streamData)
+    );
 }
 
-
-/* ==========================
-   STOP STREAM
-========================== */
 
 function stopStream() {
 
@@ -1534,38 +1752,469 @@ function stopStream() {
     const status =
         document.getElementById("statusText");
 
-    if (!preview) {
-        return;
+    if (!preview) return;
+
+    const activeStream =
+        localStorage.getItem("deskStreamActive");
+
+    if (activeStream) {
+
+        const stream =
+            JSON.parse(activeStream);
+
+        stream.endedAt =
+            new Date().toISOString();
+
+        const history =
+            JSON.parse(
+                localStorage.getItem("deskStreamPast") || "[]"
+            );
+
+        history.unshift(stream);
+
+        localStorage.setItem(
+            "deskStreamPast",
+            JSON.stringify(history)
+        );
+
+        localStorage.removeItem("deskStreamActive");
     }
 
     preview.classList.remove("live");
 
     preview.innerHTML = `
-
         <div class="preview-content">
-
-            <strong>
-                Stream Preview
-            </strong>
-
-            Camera and stream preview
-            will appear here.
-
+            <strong>Stream Preview</strong>
+            Camera and stream preview will appear here.
         </div>
-
     `;
 
     dot.classList.remove("live");
-
-    status.textContent =
-        "Ready to stream";
-
+    status.textContent = "Ready to stream";
 }
 
 
-/* ==========================
-   PLATFORM
-========================== */
+let deskCameraEnabled = true;
+let deskMicEnabled = true;
+let deskRecording = false;
+let deskVirtualCamera = false;
+
+let deskScenes =
+    JSON.parse(localStorage.getItem("deskStreamScenes") || "[]");
+
+let deskChannels =
+    JSON.parse(localStorage.getItem("deskStreamChannels") || "[]");
+
+
+function openStreamDescription() {
+    document.getElementById("streamDescriptionModal").classList.add("show");
+}
+
+
+function closeStreamDescription() {
+    document.getElementById("streamDescriptionModal").classList.remove("show");
+}
+
+
+function saveStreamDescription() {
+    const description =
+        document.getElementById("streamDescription").value;
+
+    localStorage.setItem(
+        "deskStreamDescription",
+        description
+    );
+
+    closeStreamDescription();
+}
+
+
+function toggleDeskCamera() {
+
+    deskCameraEnabled = !deskCameraEnabled;
+
+    const button =
+        document.getElementById("cameraToggle");
+
+    button.textContent =
+        deskCameraEnabled ? "ON" : "OFF";
+
+    button.classList.toggle(
+        "on",
+        deskCameraEnabled
+    );
+}
+
+
+function toggleDeskMic() {
+
+    deskMicEnabled = !deskMicEnabled;
+
+    const button =
+        document.getElementById("micToggle");
+
+    button.textContent =
+        deskMicEnabled ? "ON" : "OFF";
+
+    button.classList.toggle(
+        "on",
+        deskMicEnabled
+    );
+}
+
+
+function openDeskMultiView() {
+
+    const value =
+        document.getElementById("multiViewSelect").value;
+
+    alert("Multi-View: " + value);
+}
+
+
+function openSceneCreator() {
+
+    document.getElementById("newSceneName").value = "";
+
+    document.getElementById(
+        "sceneCreatorModal"
+    ).classList.add("show");
+}
+
+
+function closeSceneCreator() {
+
+    document.getElementById(
+        "sceneCreatorModal"
+    ).classList.remove("show");
+}
+
+
+function createDeskScene() {
+
+    const name =
+        document.getElementById(
+            "newSceneName"
+        ).value.trim();
+
+    if (!name) {
+        alert("Please enter a scene name.");
+        return;
+    }
+
+    deskScenes.push({
+        id: Date.now(),
+        name: name
+    });
+
+    localStorage.setItem(
+        "deskStreamScenes",
+        JSON.stringify(deskScenes)
+    );
+
+    closeSceneCreator();
+    renderDeskScenes();
+}
+
+
+function renderDeskScenes() {
+
+    const list =
+        document.getElementById("sceneList");
+
+    if (!list) return;
+
+    if (!deskScenes.length) {
+
+        list.innerHTML = `
+            <div class="ds-empty">
+                No scenes yet.<br>
+                Click <strong>+ Add Scene</strong> to create your own.
+            </div>
+        `;
+
+        return;
+    }
+
+    list.innerHTML =
+        deskScenes.map(
+            (scene, index) => `
+                <div
+                    class="ds-list-item ds-scene-item ${index === 0 ? "active" : ""}"
+                    onclick="selectDeskScene(${scene.id}, this)"
+                >
+                    <div class="ds-scene-left">
+                        <div class="ds-scene-thumb">SCENE</div>
+
+                        <div class="ds-item-info">
+                            <strong>${escapeHTML(scene.name)}</strong>
+                            <span>User created scene</span>
+                        </div>
+                    </div>
+
+                    <div class="ds-item-actions">
+                        <button
+                            onclick="event.stopPropagation(); deleteDeskScene(${scene.id})"
+                        >
+                            🗑
+                        </button>
+                    </div>
+                </div>
+            `
+        ).join("");
+}
+
+
+function selectDeskScene(id, element) {
+
+    document
+        .querySelectorAll(".ds-scene-item")
+        .forEach(item =>
+            item.classList.remove("active")
+        );
+
+    element.classList.add("active");
+}
+
+
+function deleteDeskScene(id) {
+
+    const scene =
+        deskScenes.find(item => item.id === id);
+
+    if (!scene) return;
+
+    if (!confirm(`Delete scene "${scene.name}"?`)) {
+        return;
+    }
+
+    deskScenes =
+        deskScenes.filter(item => item.id !== id);
+
+    localStorage.setItem(
+        "deskStreamScenes",
+        JSON.stringify(deskScenes)
+    );
+
+    renderDeskScenes();
+}
+
+
+function openChannelCreator() {
+
+    if (deskChannels.length >= 50) {
+        alert("You have reached the 50-channel limit.");
+        return;
+    }
+
+    document.getElementById("newChannelName").value = "";
+    document.getElementById("newChannelKey").value = "";
+
+    document.getElementById(
+        "channelCreatorModal"
+    ).classList.add("show");
+}
+
+
+function closeChannelCreator() {
+
+    document.getElementById(
+        "channelCreatorModal"
+    ).classList.remove("show");
+}
+
+
+function createDeskChannel() {
+
+    if (deskChannels.length >= 50) {
+        alert("You have reached the 50-channel limit.");
+        return;
+    }
+
+    const name =
+        document.getElementById(
+            "newChannelName"
+        ).value.trim();
+
+    const platform =
+        document.getElementById(
+            "newChannelPlatform"
+        ).value;
+
+    const key =
+        document.getElementById(
+            "newChannelKey"
+        ).value.trim();
+
+    if (!name) {
+        alert("Please enter the channel account name.");
+        return;
+    }
+
+    if (!key) {
+        alert("Please enter the stream key.");
+        return;
+    }
+
+    deskChannels.push({
+        id: Date.now(),
+        name: name,
+        platform: platform,
+        connected: false,
+        hasKey: true
+    });
+
+    localStorage.setItem(
+        "deskStreamChannels",
+        JSON.stringify(deskChannels)
+    );
+
+    closeChannelCreator();
+    renderDeskChannels();
+}
+
+
+function renderDeskChannels() {
+
+    const list =
+        document.getElementById("channelList");
+
+    const count =
+        document.getElementById("channelCount");
+
+    if (!list) return;
+
+    if (count) {
+        count.textContent =
+            deskChannels.length + " / 50";
+    }
+
+    if (!deskChannels.length) {
+
+        list.innerHTML = `
+            <div class="ds-empty">
+                No channel accounts yet.<br>
+                Click <strong>+ Add Channel</strong>.
+            </div>
+        `;
+
+        return;
+    }
+
+    list.innerHTML =
+        deskChannels.map(
+            channel => `
+                <div class="ds-list-item">
+
+                    <div class="ds-item-info">
+                        <strong>${escapeHTML(channel.name)}</strong>
+                        <span>
+                            ${escapeHTML(channel.platform)}
+                            •
+                            ${channel.connected ? "Connected" : "Not Connected"}
+                        </span>
+                    </div>
+
+                    <div class="ds-item-actions">
+
+                        <button onclick="toggleDeskChannel(${channel.id})">
+                            ${channel.connected ? "Disconnect" : "Connect"}
+                        </button>
+
+                        <button onclick="deleteDeskChannel(${channel.id})">
+                            🗑
+                        </button>
+
+                    </div>
+
+                </div>
+            `
+        ).join("");
+}
+
+
+function toggleDeskChannel(id) {
+
+    const channel =
+        deskChannels.find(item => item.id === id);
+
+    if (!channel) return;
+
+    channel.connected =
+        !channel.connected;
+
+    localStorage.setItem(
+        "deskStreamChannels",
+        JSON.stringify(deskChannels)
+    );
+
+    renderDeskChannels();
+}
+
+
+function deleteDeskChannel(id) {
+
+    const channel =
+        deskChannels.find(item => item.id === id);
+
+    if (!channel) return;
+
+    if (!confirm(`Remove channel "${channel.name}"?`)) {
+        return;
+    }
+
+    deskChannels =
+        deskChannels.filter(item => item.id !== id);
+
+    localStorage.setItem(
+        "deskStreamChannels",
+        JSON.stringify(deskChannels)
+    );
+
+    renderDeskChannels();
+}
+
+
+function toggleDeskRecording() {
+
+    deskRecording = !deskRecording;
+
+    const button =
+        document.getElementById("recordButton");
+
+    button.textContent =
+        deskRecording
+            ? "■ Stop Recording"
+            : "● Start Recording";
+}
+
+
+function toggleDeskVirtualCamera() {
+
+    deskVirtualCamera =
+        !deskVirtualCamera;
+
+    const button =
+        document.getElementById(
+            "virtualCameraButton"
+        );
+
+    button.textContent =
+        deskVirtualCamera
+            ? "■ Stop Virtual Camera"
+            : "📷 Start Virtual Camera";
+}
+
+
+function openDeskStudioMode() {
+    alert("Studio Mode is ready for the next production update.");
+}
+
+
+function openDeskSettings() {
+    alert("Desk Stream Settings");
+}
+
 
 function connectPlatform() {
 
