@@ -22,27 +22,9 @@
         </div>
     </div>
 
-    <div class="channel-selector">
-
-        <label>CHANNEL</label>
-
-        <select id="channelSelect">
-            <option value="main">Joy Church Main</option>
-            <option value="youth">Joy Church Youth</option>
-            <option value="worship">Worship</option>
-            <option value="bible">Bible Study</option>
-        </select>
-
-    </div>
-
     <div class="top-status">
-
-        <span class="status-dot"></span>
-
-        <span id="connectionStatus">
-            Ready
-        </span>
-
+        <span id="connectionDot" class="status-dot"></span>
+        <span id="connectionStatus">Ready</span>
     </div>
 
     <button class="home-button" onclick="goHome()">
@@ -52,514 +34,542 @@
 </header>
 
 
-<main class="workspace">
+<main class="control-room">
 
 
-    <!-- LEFT -->
-    <aside class="left-panel">
+    <!-- =========================
+         STREAM SETUP
+    ========================== -->
 
+    <section class="card">
 
-        <section class="panel">
-
-            <div class="panel-title">
-                <span>SCENES</span>
-
-                <button onclick="addScene()">+</button>
-            </div>
-
-
-            <div id="sceneList" class="scene-list">
-
-                <button
-                    class="scene active"
-                    data-scene="Main Service"
-                    onclick="selectScene(this)"
-                >
-                    <span>▣</span>
-                    Main Service
-                </button>
-
-                <button
-                    class="scene"
-                    data-scene="Worship"
-                    onclick="selectScene(this)"
-                >
-                    <span>♪</span>
-                    Worship
-                </button>
-
-                <button
-                    class="scene"
-                    data-scene="Sermon"
-                    onclick="selectScene(this)"
-                >
-                    <span>▤</span>
-                    Sermon
-                </button>
-
-                <button
-                    class="scene"
-                    data-scene="Bible"
-                    onclick="selectScene(this)"
-                >
-                    <span>📖</span>
-                    Bible
-                </button>
-
-                <button
-                    class="scene"
-                    data-scene="Announcement"
-                    onclick="selectScene(this)"
-                >
-                    <span>▧</span>
-                    Announcement
-                </button>
-
-            </div>
-
-        </section>
-
-
-        <section class="panel sources-panel">
-
-            <div class="panel-title">
-                <span>SOURCES</span>
-
-                <button onclick="addSource()">+</button>
-            </div>
-
-
-            <div id="sourceList">
-
-                <div class="source">
-                    <span>📷</span>
-                    Camera
-                    <button onclick="toggleSource(this)">◉</button>
-                </div>
-
-                <div class="source">
-                    <span>🎤</span>
-                    Microphone
-                    <button onclick="toggleSource(this)">◉</button>
-                </div>
-
-                <div class="source">
-                    <span>📖</span>
-                    Bible Projection
-                    <button onclick="toggleSource(this)">◉</button>
-                </div>
-
-                <div class="source">
-                    <span>🎵</span>
-                    Lyrics
-                    <button onclick="toggleSource(this)">◉</button>
-                </div>
-
-                <div class="source">
-                    <span>🖼️</span>
-                    Logo
-                    <button onclick="toggleSource(this)">◉</button>
-                </div>
-
-            </div>
-
-        </section>
-
-
-    </aside>
-
-
-    <!-- CENTER -->
-    <section class="center-panel">
-
-
-        <div class="preview-header">
-
-            <div>
-                <span class="preview-label">PREVIEW</span>
-                <strong id="previewScene">
-                    Main Service
-                </strong>
-            </div>
-
-            <button onclick="fullscreenPreview()">
-                ⛶
-            </button>
-
+        <div class="card-header">
+            <h2>Stream Setup</h2>
         </div>
 
 
-        <div class="preview-window" id="previewWindow">
+        <label>Stream Title</label>
 
-            <div class="preview-content">
+        <input
+            id="streamTitle"
+            type="text"
+            placeholder="Enter stream title"
+        >
 
-                <span>PREVIEW</span>
 
-                <h2 id="previewTitle">
-                    Main Service
-                </h2>
+        <button
+            class="secondary-button"
+            onclick="openDescriptionModal()"
+        >
+            ✎ Stream Description
+        </button>
 
-                <p>
-                    This is what you are preparing
-                    to send live.
-                </p>
+
+        <label>Category</label>
+
+        <select id="streamCategory">
+            <option>Church</option>
+            <option>Worship</option>
+            <option>Sermon</option>
+            <option>Bible Study</option>
+            <option>Event</option>
+            <option>Other</option>
+        </select>
+
+
+        <label>Video Quality</label>
+
+        <select id="videoQuality">
+            <option>720p</option>
+            <option selected>1080p</option>
+            <option>1440p</option>
+            <option>4K</option>
+        </select>
+
+
+        <label>Frame Rate</label>
+
+        <select id="frameRate">
+            <option>30 FPS</option>
+            <option selected>60 FPS</option>
+        </select>
+
+
+        <label>Thumbnail</label>
+
+        <div class="thumbnail-box">
+
+            <div id="thumbnailPreview">
+                No Thumbnail
+            </div>
+
+            <div class="thumbnail-actions">
+
+                <label class="upload-button">
+                    Replace
+                    <input
+                        id="thumbnailInput"
+                        type="file"
+                        accept="image/*"
+                        hidden
+                        onchange="previewThumbnail(event)"
+                    >
+                </label>
+
+                <button
+                    onclick="removeThumbnail()"
+                >
+                    Remove
+                </button>
 
             </div>
 
         </div>
 
+    </section>
 
-        <div class="transition-bar">
 
-            <button onclick="transitionScene()">
-                TRANSITION
-            </button>
 
-            <button onclick="cutScene()">
-                CUT
-            </button>
+    <!-- =========================
+         CAMERA & AUDIO
+    ========================== -->
 
-            <button onclick="fadeScene()">
-                FADE
+    <section class="card">
+
+        <div class="card-header">
+            <h2>Camera &amp; Audio</h2>
+        </div>
+
+
+        <label>Camera</label>
+
+        <select id="cameraSelect">
+            <option>Default Camera</option>
+        </select>
+
+        <div class="toggle-row">
+
+            <span>Camera Enabled</span>
+
+            <button
+                id="cameraToggle"
+                class="toggle on"
+                onclick="toggleCamera()"
+            >
+                ON
             </button>
 
         </div>
 
 
-        <div class="program-header">
+        <label>Microphone</label>
 
-            <div>
-                <span class="program-label">PROGRAM</span>
+        <select id="micSelect">
+            <option>Default Microphone</option>
+        </select>
 
-                <strong id="programScene">
-                    Main Service
-                </strong>
-            </div>
+        <div class="toggle-row">
 
-            <span class="live-indicator">
-                ● LIVE OUTPUT
+            <span>Microphone Enabled</span>
+
+            <button
+                id="micToggle"
+                class="toggle on"
+                onclick="toggleMicrophone()"
+            >
+                ON
+            </button>
+
+        </div>
+
+
+        <label>Audio</label>
+
+        <select id="audioSelect">
+            <option>Default Audio</option>
+            <option>Desktop Audio</option>
+            <option>Church Sound System</option>
+        </select>
+
+
+        <label>Screen Projection</label>
+
+        <select id="projectionSelect">
+            <option>No Projection</option>
+            <option>Desk Stream Projection</option>
+        </select>
+
+
+        <label>Multi-View</label>
+
+        <select id="multiviewSelect">
+
+            <option>Off</option>
+            <option>2 Sources</option>
+            <option>4 Sources</option>
+            <option>6 Sources</option>
+
+        </select>
+
+        <button
+            class="secondary-button"
+            onclick="openMultiView()"
+        >
+            🖥 Open Multi-View
+        </button>
+
+    </section>
+
+
+
+    <!-- =========================
+         DESTINATIONS / CHANNELS
+    ========================== -->
+
+    <section class="card">
+
+        <div class="card-header">
+
+            <h2>Channels</h2>
+
+            <span id="channelCount">
+                0 / 50
             </span>
 
         </div>
 
 
-        <div class="program-window" id="programWindow">
-
-            <div class="program-content">
-
-                <span>PROGRAM</span>
-
-                <h2 id="programTitle">
-                    Main Service
-                </h2>
-
-                <p>
-                    Current live output
-                </p>
-
-            </div>
-
-        </div>
+        <div id="channelList" class="channel-list"></div>
 
 
-        <div class="status-strip">
-
-            <div>
-                <span>FPS</span>
-                <strong id="fpsValue">60</strong>
-            </div>
-
-            <div>
-                <span>CPU</span>
-                <strong id="cpuValue">18%</strong>
-            </div>
-
-            <div>
-                <span>GPU</span>
-                <strong id="gpuValue">24%</strong>
-            </div>
-
-            <div>
-                <span>NETWORK</span>
-                <strong id="networkValue">Excellent</strong>
-            </div>
-
-            <div>
-                <span>DROPPED</span>
-                <strong id="droppedValue">0.0%</strong>
-            </div>
-
-        </div>
-
+        <button
+            id="addChannelButton"
+            class="primary-button"
+            onclick="addChannel()"
+        >
+            + Add Channel
+        </button>
 
     </section>
 
 
-    <!-- RIGHT -->
-    <aside class="right-panel">
 
+    <!-- =========================
+         SCENES
+    ========================== -->
 
-        <section class="panel stream-panel">
+    <section class="card">
 
-            <div class="panel-title">
-                STREAM
-            </div>
+        <div class="card-header">
 
-
-            <div class="stream-status">
-
-                <span class="big-status-dot"></span>
-
-                <div>
-
-                    <strong id="streamStatus">
-                        OFFLINE
-                    </strong>
-
-                    <span id="streamTimer">
-                        Ready to stream
-                    </span>
-
-                </div>
-
-            </div>
-
-
-            <div class="quality">
-
-                <div>
-                    <span>QUALITY</span>
-                    <strong>1080p</strong>
-                </div>
-
-                <div>
-                    <span>FPS</span>
-                    <strong>60</strong>
-                </div>
-
-                <div>
-                    <span>BITRATE</span>
-                    <strong>6 Mbps</strong>
-                </div>
-
-            </div>
-
-
-            <div class="platforms">
-
-                <div>
-                    <span>YouTube</span>
-                    <strong>●</strong>
-                </div>
-
-                <div>
-                    <span>TikTok</span>
-                    <strong>●</strong>
-                </div>
-
-                <div>
-                    <span>Facebook</span>
-                    <strong>●</strong>
-                </div>
-
-                <div>
-                    <span>Custom RTMP</span>
-                    <strong>●</strong>
-                </div>
-
-            </div>
-
+            <h2>Scenes</h2>
 
             <button
-                id="goLiveButton"
-                class="go-live"
-                onclick="startStream()"
+                class="small-button"
+                onclick="addScene()"
             >
-                ● GO LIVE
+                + Add Scene
             </button>
 
-
-            <button
-                id="stopButton"
-                class="stop-stream"
-                onclick="stopStream()"
-                disabled
-            >
-                ■ STOP STREAM
-            </button>
+        </div>
 
 
-            <button
-                id="recordButton"
-                class="record-button"
-                onclick="toggleRecording()"
-            >
-                ● START RECORDING
-            </button>
+        <div
+            id="sceneList"
+            class="scene-list"
+        ></div>
 
-        </section>
+    </section>
 
 
-        <section class="panel audio-panel">
 
-            <div class="panel-title">
-                AUDIO MIXER
-            </div>
+    <!-- =========================
+         STREAM CONTROLS
+    ========================== -->
 
+    <section class="card">
 
-            <div class="mixer">
-
-                <div class="mixer-row">
-
-                    <div class="mixer-name">
-                        🎤 Mic
-                    </div>
-
-                    <input
-                        type="range"
-                        min="0"
-                        max="100"
-                        value="80"
-                        oninput="changeVolume(this, 'mic')"
-                    >
-
-                    <span id="micVolume">
-                        80
-                    </span>
-
-                    <button onclick="muteChannel(this)">
-                        🔊
-                    </button>
-
-                </div>
+        <div class="card-header">
+            <h2>Stream Controls</h2>
+        </div>
 
 
-                <div class="mixer-row">
-
-                    <div class="mixer-name">
-                        🎵 Music
-                    </div>
-
-                    <input
-                        type="range"
-                        min="0"
-                        max="100"
-                        value="55"
-                        oninput="changeVolume(this, 'music')"
-                    >
-
-                    <span id="musicVolume">
-                        55
-                    </span>
-
-                    <button onclick="muteChannel(this)">
-                        🔊
-                    </button>
-
-                </div>
+        <button
+            id="startStreamButton"
+            class="control-button primary-control"
+            onclick="startStreaming()"
+        >
+            ▶ Start Streaming
+        </button>
 
 
-                <div class="mixer-row">
-
-                    <div class="mixer-name">
-                        🔊 Desktop
-                    </div>
-
-                    <input
-                        type="range"
-                        min="0"
-                        max="100"
-                        value="65"
-                        oninput="changeVolume(this, 'desktop')"
-                    >
-
-                    <span id="desktopVolume">
-                        65
-                    </span>
-
-                    <button onclick="muteChannel(this)">
-                        🔊
-                    </button>
-
-                </div>
+        <button
+            id="startRecordingButton"
+            class="control-button"
+            onclick="toggleRecording()"
+        >
+            ● Start Recording
+        </button>
 
 
-                <div class="mixer-row">
+        <button
+            id="virtualCameraButton"
+            class="control-button"
+            onclick="toggleVirtualCamera()"
+        >
+            📷 Start Virtual Camera
+        </button>
 
-                    <div class="mixer-name">
-                        🎚 Master
-                    </div>
 
-                    <input
-                        type="range"
-                        min="0"
-                        max="100"
-                        value="90"
-                        oninput="changeVolume(this, 'master')"
-                    >
+        <button
+            class="control-button"
+            onclick="openStudioMode()"
+        >
+            🎬 Studio Mode
+        </button>
 
-                    <span id="masterVolume">
-                        90
-                    </span>
 
-                    <button onclick="muteChannel(this)">
-                        🔊
-                    </button>
+        <button
+            class="control-button"
+            onclick="openSettings()"
+        >
+            ⚙ Settings
+        </button>
 
-                </div>
+
+        <div class="stream-status">
+
+            <span
+                id="liveDot"
+                class="status-dot"
+            ></span>
+
+            <div>
+
+                <strong id="streamStatus">
+                    OFFLINE
+                </strong>
+
+                <span id="streamTimer">
+                    Ready
+
+                </span>
 
             </div>
 
-        </section>
+        </div>
 
+    </section>
 
-        <section class="panel tools-panel">
-
-            <div class="panel-title">
-                TOOLS
-            </div>
-
-
-            <div class="tool-grid">
-
-                <button onclick="openBible()">
-                    📖
-                    <span>Bible</span>
-                </button>
-
-                <button onclick="openLyrics()">
-                    🎵
-                    <span>Lyrics</span>
-                </button>
-
-                <button onclick="openCamera()">
-                    📷
-                    <span>Camera</span>
-                </button>
-
-                <button onclick="screenCapture()">
-                    🖥️
-                    <span>Screen</span>
-                </button>
-
-                <button onclick="addTextSource()">
-                    📝
-                    <span>Text</span>
-                </button>
-
-                <button onclick="openSettings()">
-                    ⚙️
-                    <span>Settings</span>
-                </button>
-
-            </div>
-
-        </section>
-
-
-    </aside>
 
 </main>
+
+
+
+<!-- =========================
+     DESCRIPTION MODAL
+========================== -->
+
+<div
+    id="descriptionModal"
+    class="modal"
+>
+
+    <div class="modal-box">
+
+        <div class="modal-header">
+
+            <h2>Stream Description</h2>
+
+            <button
+                onclick="closeDescriptionModal()"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <textarea
+            id="streamDescription"
+            placeholder="Tell viewers about this livestream..."
+        ></textarea>
+
+
+        <div class="modal-actions">
+
+            <button
+                class="secondary-button"
+                onclick="closeDescriptionModal()"
+            >
+                Cancel
+            </button>
+
+            <button
+                class="primary-button"
+                onclick="saveDescription()"
+            >
+                Save
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================
+     SCENE MODAL
+========================== -->
+
+<div
+    id="sceneModal"
+    class="modal"
+>
+
+    <div class="modal-box">
+
+        <div class="modal-header">
+
+            <h2>Create Scene</h2>
+
+            <button
+                onclick="closeSceneModal()"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <label>Scene Name</label>
+
+        <input
+            id="sceneNameInput"
+            type="text"
+            placeholder="Enter your scene name"
+        >
+
+
+        <div class="modal-actions">
+
+            <button
+                class="secondary-button"
+                onclick="closeSceneModal()"
+            >
+                Cancel
+            </button>
+
+            <button
+                class="primary-button"
+                onclick="saveScene()"
+            >
+                Create Scene
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================
+     CHANNEL MODAL
+========================== -->
+
+<div
+    id="channelModal"
+    class="modal"
+>
+
+    <div class="modal-box">
+
+        <div class="modal-header">
+
+            <h2>Add Channel</h2>
+
+            <button
+                onclick="closeChannelModal()"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <label>Channel Name</label>
+
+        <input
+            id="channelNameInput"
+            type="text"
+            placeholder="Example: Joy Church YouTube"
+        >
+
+
+        <label>Platform</label>
+
+        <select id="channelPlatform">
+
+            <option>YouTube</option>
+            <option>Facebook</option>
+            <option>TikTok</option>
+            <option>Twitch</option>
+            <option>Custom RTMP</option>
+
+        </select>
+
+
+        <label>Connection Method</label>
+
+        <select id="connectionMethod">
+
+            <option>Account Connection</option>
+            <option>Stream Key</option>
+
+        </select>
+
+
+        <label>Stream Key</label>
+
+        <input
+            id="channelStreamKey"
+            type="password"
+            placeholder="Enter stream key"
+        >
+
+
+        <p class="security-note">
+            🔒 Stream keys are masked and should never
+            be placed directly into public frontend code.
+        </p>
+
+
+        <div class="modal-actions">
+
+            <button
+                class="secondary-button"
+                onclick="closeChannelModal()"
+            >
+                Cancel
+            </button>
+
+            <button
+                class="primary-button"
+                onclick="saveChannel()"
+            >
+                Add Channel
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
 
 
 <div
